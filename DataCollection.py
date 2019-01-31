@@ -28,7 +28,7 @@ class SetParameters:
             self.num_img = num_img_box.get()
             self.break_size = break_box.get()
             print(self.img_path)
-            window.quit()
+            window.destroy()
 
         window = tkinter.Tk()
         window.title("Set Experiment Parameters")
@@ -47,34 +47,37 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[0]).grid(row=0, column=0, sticky='E')
         img_entry = tkinter.Entry(frame, textvariable=img_path_box)
+        img_entry.insert(0,'assets/BenchmarkIMAGES')
         img_entry.grid(row=0, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[1]).grid(row=1, column=0, sticky='E')
-        img_entry = tkinter.Entry(frame, textvariable=desc_path_box)
-        img_entry.grid(row=1, column=1,sticky='W')
+        desc_entry = tkinter.Entry(frame, textvariable=desc_path_box)
+        desc_entry.insert(0, 'assets/descriptions.csv')
+        desc_entry.grid(row=1, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[2]).grid(row=2, column=0, sticky='E')
-        img_entry = tkinter.Entry(frame, textvariable=res_path_box)
-        img_entry.grid(row=2, column=1,sticky='W')
+        res_entry = tkinter.Entry(frame, textvariable=res_path_box)
+        res_entry.insert(0, 'results.csv')
+        res_entry.grid(row=2, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
-        img_entry = tkinter.Entry(frame, textvariable=num_img_box)
-        img_entry.grid(row=3, column=1,sticky='W')
+        num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
+        num_img_entry.grid(row=3, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
-        img_entry = tkinter.Entry(frame, textvariable=break_box)
-        img_entry.grid(row=4, column=1,sticky='W')
+        break_entry = tkinter.Entry(frame, textvariable=break_box)
+        break_entry.grid(row=4, column=1,sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
         window.mainloop()
 
     def __init__(self):
-        self.img_path = ""
-        self.desc_path = ""
-        self.res_path = ""
+        self.img_path = 'assets/BenchmarkIMAGES'
+        self.desc_path = 'assets/descriptions.csv'
+        self.res_path = 'results.csv'
         self.num_img = 0
         self.break_size = 0
-        # self.get_params()
+        self.get_params()
 
 
 class RunExperiment:
@@ -139,7 +142,7 @@ class RunExperiment:
     def choose_string(self, choice, res_path):
         self.write_entry(res_path, choice)
         if self.my_image_number == (len(self.image_files) - 1):
-            self.window.quit()
+            self.window.destroy()
         else:
             self.my_image_number += 1
             self.get_labels()
@@ -201,9 +204,8 @@ class RunExperiment:
 
 #Run experiment:
 params = SetParameters()
-params.img_path = 'assets/BenchmarkIMAGES'
-params.desc_path = 'assets/descriptions.csv'
-params.res_path = 'results.csv'
+print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
+
 RunExperiment(params)
 
 # exp_window = tkinter.Tk()
