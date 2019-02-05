@@ -18,6 +18,7 @@ from functools import partial
 from PIL import ImageTk, Image
 from os import listdir, path
 from os.path import isfile, join
+import pyttsx3
 
 class SetParameters:
     def get_params(self):
@@ -25,8 +26,8 @@ class SetParameters:
             self.img_path = img_path_box.get()
             self.desc_path = desc_path_box.get()
             self.res_path= res_path_box.get()
-            self.num_img = num_img_box.get()
-            self.break_size = break_box.get()
+            # self.num_img = num_img_box.get()
+            # self.break_size = break_box.get()
             print(self.img_path)
             window.destroy()
 
@@ -60,13 +61,13 @@ class SetParameters:
         res_entry.insert(0, 'results.csv')
         res_entry.grid(row=2, column=1,sticky='W')
 
-        tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
-        num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
-        num_img_entry.grid(row=3, column=1,sticky='W')
-
-        tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
-        break_entry = tkinter.Entry(frame, textvariable=break_box)
-        break_entry.grid(row=4, column=1,sticky='W')
+        # tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
+        # num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
+        # num_img_entry.grid(row=3, column=1,sticky='W')
+        #
+        # tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
+        # break_entry = tkinter.Entry(frame, textvariable=break_box)
+        # break_entry.grid(row=4, column=1,sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
         window.mainloop()
@@ -99,16 +100,19 @@ class RunExperiment:
                 self.chosen_idx.append(idx)
                 self.chosen_labels.append(all_labels[idx])
 
-    def run_trial(self, params, image_name):
+
+    def run_trial(self, params):
         img_frame = ttk.Frame(self.window)
-        img_frame.grid(column="0", row="0", sticky=('N', 'W', 'E', 'S'))
-        img_frame.columnconfigure(0, weight=1)
-        img_frame.rowconfigure(0, weight=1)
+        img_frame.pack()
+        # img_frame.grid(column="0", row="0", sticky=('N', 'W', 'E', 'S'))
+        # img_frame.columnconfigure(0, weight=1)
+        # img_frame.rowconfigure(0, weight=1)
 
         button_frame = ttk.Frame(self.window)
-        button_frame.grid(column="0", row="1", sticky=('N', 'W', 'E', 'S'))
-        button_frame.columnconfigure(0, weight=1)
-        button_frame.rowconfigure(0, weight=1)
+        button_frame.pack()
+        # button_frame.grid(column="0", row="1", sticky=('N', 'W', 'E', 'S'))
+        # button_frame.columnconfigure(0, weight=1)
+        # button_frame.rowconfigure(0, weight=1)
 
         # print(image_name)
         # imgobj = ImageTk.PhotoImage(Image.open(params.img_path + '/' + image_name))
@@ -120,21 +124,22 @@ class RunExperiment:
         self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.my_image_number])
 
         self.get_labels()
-
+        font = "Courier"
+        font_size = 30
         top_left_act = partial(self.choose_string, 0, params.res_path)
-        self.top_left_bttn = tkinter.Button(button_frame, text=self.chosen_labels[0], command=top_left_act)
+        self.top_left_bttn = tkinter.Button(button_frame, text=self.chosen_labels[0], command=top_left_act, font=(font, font_size))
         self.top_left_bttn.grid(row=1, column=0)
 
         top_right_act = partial(self.choose_string, 1, params.res_path)
-        self.top_right_bttn = tkinter.Button(button_frame, text=self.chosen_labels[1], command=top_right_act)
+        self.top_right_bttn = tkinter.Button(button_frame, text=self.chosen_labels[1], command=top_right_act, font=(font, font_size))
         self.top_right_bttn.grid(row=1, column=1)
 
         bottom_left_act = partial(self.choose_string, 2, params.res_path)
-        self.bottom_left_bttn = tkinter.Button(button_frame, text=self.chosen_labels[2], command=bottom_left_act)
+        self.bottom_left_bttn = tkinter.Button(button_frame, text=self.chosen_labels[2], command=bottom_left_act, font=(font, font_size))
         self.bottom_left_bttn.grid(row=2, column=0)
 
         bottom_right_act = partial(self.choose_string, 3, params.res_path)
-        self.bottom_right_bttn = tkinter.Button(button_frame, text=self.chosen_labels[3], command=bottom_right_act)
+        self.bottom_right_bttn = tkinter.Button(button_frame, text=self.chosen_labels[3], command=bottom_right_act, font=(font, font_size))
         self.bottom_right_bttn.grid(row=2, column=1)
 
         self.window.mainloop()
@@ -187,6 +192,8 @@ class RunExperiment:
         self.descriptions = {}
         self.window = tkinter.Tk()
         self.window.title("Trial 1")
+        w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
+        self.window.geometry("%dx%d+0+0" % (w, h))
         self.read_image_names(params)
         self.read_desc(params)
         self.my_images = []
@@ -196,7 +203,7 @@ class RunExperiment:
             full_path = params.img_path + '/' + image
             self.my_image_names.append(image)
             self.my_images.append(ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS)))
-        self.run_trial(params, image)
+        self.run_trial(params)
 
 #Set parameters:
 # params = SetParameters()
