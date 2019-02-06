@@ -23,19 +23,27 @@ import os
 import re
 
 def beep():
-    duration = 0.5  # second
+    duration = 0.35  # second
     freq = 440  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+
+def high_beep():
+    duration = 0.5  # second
+    freq = 540  # Hz
+    os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+    time.sleep(1)
+    os.system('say next image')
 
 
 def read_label(left_label, right_label):
     beep()
     time.sleep(0.6)
-    os.system('say ' + 'left: ' + re.escape(left_label))
-    time.sleep(3)
+    os.system('say ' + 'left: ' + left_label.replace('\'', '\\\''))
+    time.sleep(1)
     beep()
     time.sleep(0.6)
-    os.system('say ' + 'right: ' + re.escape(right_label))
+    os.system('say ' + 'right: ' + right_label.replace('\'', '\\\''))
+
 
 class SetParameters:
     def get_params(self):
@@ -97,6 +105,33 @@ class SetParameters:
         self.break_size = 0
         self.get_params()
 
+class ReadInstructions:
+    def read_instructions(self):
+        os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
+                            'with the photo. Before each caption is read, this tone will sound. "')
+        time.sleep(0.25)
+        beep()
+        time.sleep(0.25)
+        os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
+                            'If the left caption fits the best, press the q key. If the right caption fits the best,'
+                            'press the p key. To repeat both captions, press the space bar. To begin the experiment,'
+                            'press the space bar."')
+
+    def exit_window(self, event):
+        self.window.destroy()
+
+    def __init__(self):
+        self.window = tkinter.Tk()
+        self.window.title("Read Instructions")
+        label = ttk.Label(self.window, text="SPEAKING INSTRUCTIONS, PRESS SPACE TO CONTINUE")
+        label.pack()
+        self.window.bind("<space>", self.exit_window)
+        self.window.tkraise()
+        self.window.update()
+        self.read_instructions()
+        self.window.mainloop()
+
+
 class RunExperiment:
     def read_image_names(self,params):
         self.image_files = list()
@@ -118,7 +153,6 @@ class RunExperiment:
                 if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
                     self.label_pairs.add((image, label_l, label_r))
 
-
     def run_trial(self, params):
         img_frame = ttk.Frame(self.window)
         img_frame.pack()
@@ -126,10 +160,10 @@ class RunExperiment:
         button_frame = ttk.Frame(self.window)
         button_frame.pack()
 
-        self.img_canvas = ttk.Canvas(img_frame, width=500, height=350)
-        self.img_canvas.grid(row=0, column=0)
-
         self.curr_image_name, left_label, right_label = self.label_pairs.pop();
+
+        self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(), height=self.my_images[self.curr_image_name].height())
+        self.img_canvas.pack()
 
         self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.curr_image_name])
 
@@ -137,12 +171,12 @@ class RunExperiment:
         font_size = 30
         top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
         self.top_left_bttn = tkinter.Button(button_frame, text=left_label, command=top_left_act, font=(font, font_size))
-        self.top_left_bttn.grid(row=1, column=0)
+        self.top_left_bttn.pack()
         self.window.bind("q",top_left_act)
 
         top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
         self.top_right_bttn = tkinter.Button(button_frame, text=right_label, command=top_right_act, font=(font, font_size))
-        self.top_right_bttn.grid(row=1, column=1)
+        self.top_right_bttn.pack()
         self.window.bind("p",top_right_act)
         self.window.tkraise()
         self.window.update()
@@ -150,6 +184,7 @@ class RunExperiment:
         self.window.mainloop()
 
     def choose_string(self, img_name, pressed, res_path, event=None):
+        high_beep()
         choice = ""
         alternative = ""
         if pressed == 'left':
@@ -221,6 +256,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
+ReadInstructions()
 #Run experiment:
 print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
