@@ -14,11 +14,28 @@ import tkinter
 import tkinter as ttk
 import csv
 import random
+import time
 from functools import partial
 from PIL import ImageTk, Image
 from os import listdir, path
 from os.path import isfile, join
-import pyttsx3
+import os
+import re
+
+def beep():
+    duration = 0.5  # second
+    freq = 440  # Hz
+    os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+
+
+def read_label(left_label, right_label):
+    beep()
+    time.sleep(0.6)
+    os.system('say ' + 'left: ' + re.escape(left_label))
+    time.sleep(3)
+    beep()
+    time.sleep(0.6)
+    os.system('say ' + 'right: ' + re.escape(right_label))
 
 class SetParameters:
     def get_params(self):
@@ -80,7 +97,6 @@ class SetParameters:
         self.break_size = 0
         self.get_params()
 
-
 class RunExperiment:
     def read_image_names(self,params):
         self.image_files = list()
@@ -90,79 +106,76 @@ class RunExperiment:
         self.image_files.sort()
         print(self.image_files)
 
-    def get_labels(self):
-        all_labels = self.descriptions[self.my_image_names[self.my_image_number]]
-        self.chosen_labels = []
-        self.chosen_idx = []
-        while len(self.chosen_idx) < 4:
+    def get_labels(self, image):
+        all_labels = self.descriptions[image]
+        chosen_labels = []
+        while len(chosen_labels) < 4:
             idx = random.randint(0,len(all_labels) - 1)
-            if idx not in self.chosen_idx:
-                self.chosen_idx.append(idx)
-                self.chosen_labels.append(all_labels[idx])
+            if all_labels[idx] not in chosen_labels:
+                chosen_labels.append(all_labels[idx])
+        for label_l in chosen_labels:
+            for label_r in chosen_labels:
+                if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
+                    self.label_pairs.add((image, label_l, label_r))
 
 
     def run_trial(self, params):
         img_frame = ttk.Frame(self.window)
         img_frame.pack()
-        # img_frame.grid(column="0", row="0", sticky=('N', 'W', 'E', 'S'))
-        # img_frame.columnconfigure(0, weight=1)
-        # img_frame.rowconfigure(0, weight=1)
 
         button_frame = ttk.Frame(self.window)
         button_frame.pack()
-        # button_frame.grid(column="0", row="1", sticky=('N', 'W', 'E', 'S'))
-        # button_frame.columnconfigure(0, weight=1)
-        # button_frame.rowconfigure(0, weight=1)
 
-        # print(image_name)
-        # imgobj = ImageTk.PhotoImage(Image.open(params.img_path + '/' + image_name))
-        # ttk.Label(img_frame, image=imgobj).grid(row=0, column=0)
-
-        self.img_canvas = ttk.Canvas(img_frame, width=750, height=500)
+        self.img_canvas = ttk.Canvas(img_frame, width=500, height=350)
         self.img_canvas.grid(row=0, column=0)
 
-        self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.my_image_number])
+        self.curr_image_name, left_label, right_label = self.label_pairs.pop();
 
-        self.get_labels()
+        self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.curr_image_name])
+
         font = "Courier"
         font_size = 30
-        top_left_act = partial(self.choose_string, 0, params.res_path)
-        self.top_left_bttn = tkinter.Button(button_frame, text=self.chosen_labels[0], command=top_left_act, font=(font, font_size))
+        top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
+        self.top_left_bttn = tkinter.Button(button_frame, text=left_label, command=top_left_act, font=(font, font_size))
         self.top_left_bttn.grid(row=1, column=0)
+        self.window.bind("q",top_left_act)
 
-        top_right_act = partial(self.choose_string, 1, params.res_path)
-        self.top_right_bttn = tkinter.Button(button_frame, text=self.chosen_labels[1], command=top_right_act, font=(font, font_size))
+        top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
+        self.top_right_bttn = tkinter.Button(button_frame, text=right_label, command=top_right_act, font=(font, font_size))
         self.top_right_bttn.grid(row=1, column=1)
-
-        bottom_left_act = partial(self.choose_string, 2, params.res_path)
-        self.bottom_left_bttn = tkinter.Button(button_frame, text=self.chosen_labels[2], command=bottom_left_act, font=(font, font_size))
-        self.bottom_left_bttn.grid(row=2, column=0)
-
-        bottom_right_act = partial(self.choose_string, 3, params.res_path)
-        self.bottom_right_bttn = tkinter.Button(button_frame, text=self.chosen_labels[3], command=bottom_right_act, font=(font, font_size))
-        self.bottom_right_bttn.grid(row=2, column=1)
-
+        self.window.bind("p",top_right_act)
+        self.window.tkraise()
+        self.window.update()
+        read_label(left_label, right_label)
         self.window.mainloop()
 
-    def choose_string(self, choice, res_path):
-        self.write_entry(res_path, choice)
-        if self.my_image_number == (len(self.image_files) - 1):
+    def choose_string(self, img_name, pressed, res_path, event=None):
+        choice = ""
+        alternative = ""
+        if pressed == 'left':
+            choice = self.top_left_bttn['text']
+            alternative = self.top_right_bttn['text']
+        else:
+            choice = self.top_right_bttn['text']
+            alternative = self.top_left_bttn['text']
+        self.write_entry(res_path, self.curr_image_name, choice, alternative)
+        if len(self.label_pairs) == 0:
             self.window.destroy()
         else:
-            self.my_image_number += 1
-            self.get_labels()
-            self.top_left_bttn.configure(text=self.chosen_labels[0])
-            self.top_right_bttn.configure(text=self.chosen_labels[1])
-            self.bottom_left_bttn.configure(text=self.chosen_labels[2])
-            self.bottom_right_bttn.configure(text=self.chosen_labels[3])
-            self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.my_image_number])
+            self.curr_image_name, left_label, right_label = self.label_pairs.pop();
+            self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
+            self.top_left_bttn.configure(text=left_label)
+            self.top_right_bttn.configure(text=right_label)
+            self.window.update()
+            read_label(left_label, right_label)
 
-    def write_entry(self, res_path, choice):
+
+    def write_entry(self, res_path, img_name, choice, alternative):
         if path.isfile(res_path) is not True:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Image name', 'Choice', 'Alternative 1', 'Alternative 2', 'Alternative 3'])
+                filewriter.writerow(['Image name', 'Choice', 'Alternative'])
         other_choices = []
         for vals in range(0,4):
             if vals != choice:
@@ -171,13 +184,13 @@ class RunExperiment:
         with open(res_path, 'a') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([self.my_image_names[self.my_image_number], self.chosen_labels[choice], self.chosen_labels[other_choices[0]], self.chosen_labels[other_choices[1]], self.chosen_labels[other_choices[2]]])
+            filewriter.writerow([img_name, choice, alternative])
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
             reader = csv.reader(f)
             temp = list(reader)
-        temp = temp[1:] # Remove table headers
+        temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
             file_name = 'i' + img_entry[0] + '.jpg'
             if i % 2 != 1:
@@ -196,26 +209,19 @@ class RunExperiment:
         self.window.geometry("%dx%d+0+0" % (w, h))
         self.read_image_names(params)
         self.read_desc(params)
-        self.my_images = []
+        self.my_images = dict()
         self.my_image_names = []
-        self.my_image_number = 0
+        self.label_pairs = set()
         for image in self.image_files:
             full_path = params.img_path + '/' + image
-            self.my_image_names.append(image)
-            self.my_images.append(ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS)))
+            self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
+            self.get_labels(image)
         self.run_trial(params)
 
 #Set parameters:
-# params = SetParameters()
-# print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
+params = SetParameters()
 
 #Run experiment:
-params = SetParameters()
 print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
 RunExperiment(params)
-
-# exp_window = tkinter.Tk()
-# exp_window.title("Run Experiment")
-# set_param = RunExperiment(exp_window)
-# exp_window.mainloop()
