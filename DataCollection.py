@@ -1,15 +1,3 @@
-# Start new image labeling session:
-    # Directory for images
-    # Directory for description csv
-    # Directory for result csv
-    # Number of images to show
-    # Image breaks
-
-# Information to collect in CSV:
-    # Image number
-    # Description chosen
-    # Amount of time needed to make decision
-
 import tkinter
 import tkinter as ttk
 import csv
@@ -54,12 +42,26 @@ class Entry:
     num_repeats = ""
 
 
+class LabelPair:
+    image_name = ""
+    left_label = ""
+    right_label = ""
+    trial_type = ""
+
+    def __init__(self, in_image_name, in_left_label, in_right_label, in_trial_type):
+        self.image_name = in_image_name
+        self.left_label = in_left_label
+        self.right_label = in_right_label
+        self.trial_type = in_trial_type
+
+
 class SetParameters:
     def get_params(self):
         def save_parameters(*args):
             self.img_path = img_path_box.get()
             self.desc_path = desc_path_box.get()
             self.res_path= res_path_box.get()
+            self.nonsense_path = nonsense_path_box.get()
             # self.num_img = num_img_box.get()
             # self.break_size = break_box.get()
             print(self.img_path)
@@ -72,11 +74,12 @@ class SetParameters:
         frame.columnconfigure(0,weight=1)
         frame.rowconfigure(0,weight=1)
 
-        field_labels = ["Image Location", "Description Location", "Results Location", "Number of Images", "Break Between Images (seconds)"]
+        field_labels = ["Image Location", "Description Location", "Results Location", "Nonsense File Path", "Number of Images", "Break Between Images (seconds)"]
 
         img_path_box = ttk.StringVar()
         desc_path_box = ttk.StringVar()
         res_path_box = ttk.StringVar()
+        nonsense_path_box = ttk.StringVar()
         num_img_box = ttk.IntVar()
         break_box = ttk.IntVar()
 
@@ -95,13 +98,18 @@ class SetParameters:
         res_entry.insert(0, 'results.csv')
         res_entry.grid(row=2, column=1,sticky='W')
 
-        # tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
-        # num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
-        # num_img_entry.grid(row=3, column=1,sticky='W')
-        #
+        tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
+        nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
+        nonsense_entry.insert(0, 'assets/nonsense.csv')
+        nonsense_entry.grid(row=3, column=1, sticky='W')
+
         # tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
+        # num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
+        # num_img_entry.grid(row=4, column=1,sticky='W')
+        #
+        # tkinter.Label(frame, text=field_labels[5]).grid(row=5, column=0, sticky='E')
         # break_entry = tkinter.Entry(frame, textvariable=break_box)
-        # break_entry.grid(row=4, column=1,sticky='W')
+        # break_entry.grid(row=5, column=1,sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
         window.mainloop()
@@ -164,8 +172,14 @@ class RunExperiment:
                     self.label_pairs.add((image, label_l, label_r, "Trial"))
 
     def get_nonsense_list(self, num_of_nonsense):
-        nonsense = ["TEST TEST 1", "TEST TEST 2", "TEST TEST 3"] # Insert reading nonsense
+        nonsense = []
+        with open(self.nonsense_path, 'r') as f:
+            reader = csv.reader(f)
+            temp = list(reader)
+        for i, sentence in enumerate(temp):
+            nonsense.append(sentence[0])
         final_list = []
+        print(nonsense)
         while len(final_list) < num_of_nonsense:
             final_list.append(random.choice(nonsense))
         return final_list
@@ -321,6 +335,7 @@ class RunExperiment:
         self.my_images = dict()
         self.my_image_names = []
         self.label_pairs = set()
+        self.nonsense_path = params.nonsense_path
         for image in self.image_files:
             full_path = params.img_path + '/' + image
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
