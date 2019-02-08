@@ -127,13 +127,39 @@ class ReadInstructions:
     def read_instructions(self):
         os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
                             'with the photo. Before each caption is read, this tone will sound. "')
-        time.sleep(0.25)
+        time.sleep(0.5)
         beep()
-        time.sleep(0.25)
+        time.sleep(0.5)
+        self.window.bind("q", self.test_left_key)
         os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
-                            'If the left caption fits the best, press the q key. If the right caption fits the best,'
-                            'press the p key. To repeat both captions, press the space bar. To begin the experiment,'
-                            'press the space bar."')
+                            'If the left caption fits the best, press the left key. If the right caption fits the best,'
+                            'press the right key. To repeat both captions, press the space bar."')
+        time.sleep(1)
+        os.system('say "' + 'Before we start, let\'s test the keys.'
+                            'Press the left key now"')
+    def test_left_key(self, event=None):
+        os.system('say "' + 'You have just pressed the left key. When you select the left key, this tone will sound:"')
+        time.sleep(0.5)
+        left_beep()
+        time.sleep(0.5)
+        self.window.bind("p", self.test_right_key)
+        os.system('say "' + 'Now, let\s test the right key. Press the right key now."')
+
+    def test_right_key(self, event=None):
+        os.system('say "' + 'You have just pressed the right key. When you select the right key, this tone will sound:"')
+        time.sleep(0.5)
+        right_beep()
+        time.sleep(0.5)
+        self.window.bind("<space>", self.test_repeat_key)
+        os.system('say "' + 'Now, let\s test the repeat key. Press the repeat key now."')
+
+    def test_repeat_key(self, event=None):
+        os.system('say "' + 'You have just pressed the repeat key'
+                            ' When this key is pressed, the description will repeat."')
+        time.sleep(0.5)
+        self.window.bind("<space>", self.exit_window)
+        os.system('say "' + 'You are now ready to start the experiment. Press the space key to begin"')
+
 
     def exit_window(self, event):
         self.window.destroy()
@@ -143,10 +169,11 @@ class ReadInstructions:
         self.window.title("Read Instructions")
         label = ttk.Label(self.window, text="SPEAKING INSTRUCTIONS, PRESS SPACE TO CONTINUE")
         label.pack()
-        self.window.bind("<space>", self.exit_window)
         self.window.tkraise()
         self.window.update()
         self.read_instructions()
+        self.window.bind("<space>", self.exit_window)
+
         self.window.mainloop()
 
 
@@ -346,8 +373,8 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-# ReadInstructions()
+ReadInstructions()
 #Run experiment:
-print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
+# print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
 RunExperiment(params)
