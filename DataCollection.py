@@ -176,6 +176,24 @@ class ReadInstructions:
 
         self.window.mainloop()
 
+class PauseExperiment:
+    def read_pause(self):
+        os.system("say \"This experiment has been paused. Please contact the proctor for assistance.\"")
+
+    def exit_window(self, event):
+        self.window.destroy()
+
+    def __init__(self):
+        self.window = tkinter.Tk()
+        self.window.title("Pause Experiment")
+        label = ttk.Label(self.window, text="PAUSING EXPERIMENT")
+        label.pack()
+        self.window.tkraise()
+        self.window.update()
+        self.read_pause()
+        self.window.bind("<space>", self.exit_window)
+        self.window.wait_window()
+
 
 class RunExperiment:
     # def read_image_names(self,params):
@@ -226,17 +244,19 @@ class RunExperiment:
         new_labels = self.get_nonsense_list(num_nonsense_pairs)
         left_nonsense_pair = num_nonsense_pairs / 2
         right_nonsense_pair = num_nonsense_pairs - left_nonsense_pair
+        new_labels_pos = 0
         while len(nonsense_pairs) < num_nonsense_pairs:
             old_pair = self.label_pairs.pop()
             if left_nonsense_pair > 0: # Left
-                new_pair = (old_pair[0], random.choice(new_labels), old_pair[2], "Nonsense Control - Left")
+                new_pair = (old_pair[0], new_labels[new_labels_pos], old_pair[2], "Nonsense Control - Left")
                 left_nonsense_pair -= 1
             else: #Right
                 old_pair = self.label_pairs.pop()
-                new_pair = (old_pair[0], old_pair[1], random.choice(new_labels), "Nonsense Control - Right")
+                new_pair = (old_pair[0], old_pair[1], new_labels[new_labels_pos], "Nonsense Control - Right")
                 right_nonsense_pair -= 1
             nonsense_pairs.append(new_pair)
             self.label_pairs.add(old_pair)
+            new_labels_pos += 1
         for new_pairs in rev_pairs:
             self.label_pairs.add(new_pairs)
         for new_pairs in nonsense_pairs:
@@ -258,6 +278,7 @@ class RunExperiment:
         self.read_label()
 
     def run_trial(self, params):
+        self.window.title("Trial " + str(self.trial_number))
         img_frame = ttk.Frame(self.window)
         img_frame.pack()
 
@@ -285,28 +306,46 @@ class RunExperiment:
         top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
         self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=top_right_act, font=(font, font_size))
         self.top_right_bttn.pack()
-        self.window.bind("p",top_right_act)
-        self.window.bind("<space>", self.repeat_label)
         self.window.tkraise()
         self.window.update()
         self.read_label()
+        self.repeat_key_counter = 0
+        self.last_key = None
+        self.window.bind("p",top_right_act)
+        self.window.bind("<space>", self.repeat_label)
         self.start_time = time.time()
         self.window.mainloop()
 
     def choose_string(self, img_name, pressed, res_path, event=None):
         self.end_time = time.time()
+        print(self.repeat_key_counter)
+        if self.repeat_key_counter > 3:
+            PauseExperiment()
+            self.repeat_key_counter = 0
         if pressed == 'left':
             left_beep()
+            if self.last_key == 'left':
+                self.repeat_key_counter += 1
+            else:
+                self.repeat_key_counter = 1
+                self.last_key = 'left'
             choice = self.top_left_bttn['text']
             alternative = self.top_right_bttn['text']
         else:
             right_beep()
+            if self.last_key == 'right':
+                self.repeat_key_counter += 1
+            else:
+                self.repeat_key_counter = 1
+                self.last_key = 'right'
             choice = self.top_right_bttn['text']
             alternative = self.top_left_bttn['text']
         self.write_entry(res_path, self.curr_image_name, choice, alternative)
         if len(self.label_pairs) == 0:
             self.window.destroy()
         else:
+            self.trial_number += 1
+            self.window.title("Trial " + str(self.trial_number))
             self.repeat_counter = 0
             curr_label_pair = self.label_pairs.pop();
             self.curr_image_name = curr_label_pair[0]
@@ -356,7 +395,6 @@ class RunExperiment:
         self.descriptions = {}
         self.image_files = list()
         self.window = tkinter.Tk()
-        self.window.title("Trial 1")
         w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
         self.window.geometry("%dx%d+0+0" % (w, h))
         # self.read_image_names(params)
@@ -365,6 +403,7 @@ class RunExperiment:
         self.my_image_names = []
         self.label_pairs = set()
         self.nonsense_path = params.nonsense_path
+        self.trial_number = 1
         print(self.image_files)
         for image in self.image_files:
             full_path = params.img_path + '/' + image
