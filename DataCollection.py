@@ -178,13 +178,13 @@ class ReadInstructions:
 
 
 class RunExperiment:
-    def read_image_names(self,params):
-        self.image_files = list()
-        for file in listdir(params.img_path):
-            if isfile(join(params.img_path, file)) and not file.startswith("."):
-                self.image_files.append(file)
-        self.image_files.sort()
-        print(self.image_files)
+    # def read_image_names(self,params):
+    #     self.image_files = list()
+    #     for file in listdir(params.img_path):
+    #         if isfile(join(params.img_path, file)) and not file.startswith("."):
+    #             self.image_files.append(file)
+    #     self.image_files.sort()
+    #     print(self.image_files)
 
     def get_labels(self, image):
         all_labels = self.descriptions[image]
@@ -344,6 +344,7 @@ class RunExperiment:
         for i, img_entry in enumerate(temp):
             file_name = 'i' + img_entry[0] + '.jpg'
             if i % 2 != 1:
+                self.image_files.append(file_name)
                 for j, value in enumerate(img_entry):
                     if j == 1:
                         self.descriptions[file_name] = list()
@@ -353,16 +354,18 @@ class RunExperiment:
 
     def __init__(self, params):
         self.descriptions = {}
+        self.image_files = list()
         self.window = tkinter.Tk()
         self.window.title("Trial 1")
         w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
         self.window.geometry("%dx%d+0+0" % (w, h))
-        self.read_image_names(params)
+        # self.read_image_names(params)
         self.read_desc(params)
         self.my_images = dict()
         self.my_image_names = []
         self.label_pairs = set()
         self.nonsense_path = params.nonsense_path
+        print(self.image_files)
         for image in self.image_files:
             full_path = params.img_path + '/' + image
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
@@ -373,7 +376,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-ReadInstructions()
+# ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
