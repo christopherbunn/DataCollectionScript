@@ -420,7 +420,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-# ReadInstructions()
+ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
