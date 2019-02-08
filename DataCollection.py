@@ -21,10 +21,12 @@ from os import listdir, path
 from os.path import isfile, join
 import os
 
+
 def beep():
     duration = 0.35  # second
     freq = 240  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+
 
 def left_beep():
     duration = 0.5  # second
@@ -32,13 +34,24 @@ def left_beep():
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
     time.sleep(1)
     os.system('say next image')
-    
+
+
 def right_beep():
     duration = 0.5  # second
     freq = 540  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
     time.sleep(1)
     os.system('say next image')
+
+
+class Entry:
+    image_name = ""
+    choice = ""
+    alternate = ""
+    choice_pos = ""
+    duration = 0.0
+    run_type = "" #trial, control1, control2
+    num_repeats = ""
 
 
 class SetParameters:
@@ -101,6 +114,7 @@ class SetParameters:
         self.break_size = 0
         self.get_params()
 
+
 class ReadInstructions:
     def read_instructions(self):
         os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
@@ -147,7 +161,7 @@ class RunExperiment:
         for label_l in chosen_labels:
             for label_r in chosen_labels:
                 if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
-                    self.label_pairs.add((image, label_l, label_r, True, False, False)) #img, l, r, is_trial, is_control_1, is_control_2
+                    self.label_pairs.add((image, label_l, label_r, "Trial"))
 
     def get_nonsense_list(self, num_of_nonsense):
         nonsense = ["TEST TEST 1", "TEST TEST 2", "TEST TEST 3"] # Insert reading nonsense
@@ -163,7 +177,7 @@ class RunExperiment:
         num_rev_pairs = len(self.label_pairs) * 0.1
         while len(rev_pairs) < num_rev_pairs:
             old_pair = self.label_pairs.pop()
-            new_pair = (old_pair[0],old_pair[2], old_pair[1], False, True, False)
+            new_pair = (old_pair[0],old_pair[2], old_pair[1], "Reverse Control")
             rev_pairs.append(new_pair)
             self.label_pairs.add(old_pair)
         # Nonsense pair - 5% - Control 2
@@ -174,11 +188,11 @@ class RunExperiment:
         while len(nonsense_pairs) < num_nonsense_pairs:
             old_pair = self.label_pairs.pop()
             if left_nonsense_pair > 0: # Left
-                new_pair = (old_pair[0], random.choice(new_labels), old_pair[2], False, False, True)
+                new_pair = (old_pair[0], random.choice(new_labels), old_pair[2], "Nonsense Control - Left")
                 left_nonsense_pair -= 1
             else: #Right
                 old_pair = self.label_pairs.pop()
-                new_pair = (old_pair[0], old_pair[1], random.choice(new_labels), False, False, True)
+                new_pair = (old_pair[0], old_pair[1], random.choice(new_labels), "Nonsense Control - Right")
                 right_nonsense_pair -= 1
             nonsense_pairs.append(new_pair)
             self.label_pairs.add(old_pair)
@@ -197,6 +211,11 @@ class RunExperiment:
         time.sleep(0.6)
         os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
 
+
+    def repeat_label(self, event=None):
+        self.repeat_counter += 1
+        self.read_label()
+
     def run_trial(self, params):
         img_frame = ttk.Frame(self.window)
         img_frame.pack()
@@ -204,14 +223,15 @@ class RunExperiment:
         button_frame = ttk.Frame(self.window)
         button_frame.pack()
 
-        curr_label_pair = self.label_pairs.pop();
+        curr_label_pair = self.label_pairs.pop()
         self.curr_image_name = curr_label_pair[0]
         self.left_label = curr_label_pair[1]
         self.right_label = curr_label_pair[2]
+        self.run_type = curr_label_pair[3]
 
         self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(), height=self.my_images[self.curr_image_name].height())
         self.img_canvas.pack()
-
+        self.repeat_counter = 0
         self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.curr_image_name])
 
         font = "Courier"
@@ -225,7 +245,7 @@ class RunExperiment:
         self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=top_right_act, font=(font, font_size))
         self.top_right_bttn.pack()
         self.window.bind("p",top_right_act)
-        self.window.bind("<space>", self.read_label)
+        self.window.bind("<space>", self.repeat_label)
         self.window.tkraise()
         self.window.update()
         self.read_label()
@@ -246,6 +266,7 @@ class RunExperiment:
         if len(self.label_pairs) == 0:
             self.window.destroy()
         else:
+            self.repeat_counter = 0
             curr_label_pair = self.label_pairs.pop();
             self.curr_image_name = curr_label_pair[0]
             self.left_label = curr_label_pair[1]
@@ -257,22 +278,22 @@ class RunExperiment:
             self.read_label()
             self.start_time = time.time()
 
-
     def write_entry(self, res_path, img_name, choice, alternative):
         if path.isfile(res_path) is not True:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Image name', 'Choice', 'Alternative'])
+                filewriter.writerow(['Image name', 'Choice', 'Alternative', 'Duration', 'Number of Repeats', 'Run Type'])
         other_choices = []
         for vals in range(0,4):
             if vals != choice:
                 other_choices.append(vals)
         print(res_path, other_choices)
         with open(res_path, 'a') as csvfile:
+            duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([img_name, choice, alternative])
+            filewriter.writerow([img_name, choice, alternative, duration, self.repeat_counter, self.run_type])
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
