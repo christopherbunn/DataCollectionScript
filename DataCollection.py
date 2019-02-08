@@ -311,6 +311,7 @@ class RunExperiment:
         self.read_label()
         self.repeat_key_counter = 0
         self.last_key = None
+        self.write_repeat = False
         self.window.bind("p",top_right_act)
         self.window.bind("<space>", self.repeat_label)
         self.start_time = time.time()
@@ -319,9 +320,10 @@ class RunExperiment:
     def choose_string(self, img_name, pressed, res_path, event=None):
         self.end_time = time.time()
         print(self.repeat_key_counter)
-        if self.repeat_key_counter > 3:
+        if self.repeat_key_counter >= 5:
             PauseExperiment()
             self.repeat_key_counter = 0
+            self.write_repeat = True
         if pressed == 'left':
             left_beep()
             if self.last_key == 'left':
@@ -341,6 +343,7 @@ class RunExperiment:
             choice = self.top_right_bttn['text']
             alternative = self.top_left_bttn['text']
         self.write_entry(res_path, self.curr_image_name, choice, alternative)
+        self.write_repeat = False
         if len(self.label_pairs) == 0:
             self.window.destroy()
         else:
@@ -363,7 +366,7 @@ class RunExperiment:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Image name', 'Choice', 'Alternative', 'Duration', 'Number of Repeats', 'Run Type'])
+                filewriter.writerow(['Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Passed Repeat Key Threshold'])
         other_choices = []
         for vals in range(0,4):
             if vals != choice:
@@ -373,7 +376,7 @@ class RunExperiment:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([img_name, choice, alternative, duration, self.repeat_counter, self.run_type])
+            filewriter.writerow([img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.write_repeat])
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
