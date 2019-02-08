@@ -325,6 +325,7 @@ class RunExperiment:
             self.repeat_key_counter = 0
             self.write_repeat = True
         if pressed == 'left':
+            self.key_pressed = 'left'
             left_beep()
             if self.last_key == 'left':
                 self.repeat_key_counter += 1
@@ -334,6 +335,7 @@ class RunExperiment:
             choice = self.top_left_bttn['text']
             alternative = self.top_right_bttn['text']
         else:
+            self.key_pressed = 'right'
             right_beep()
             if self.last_key == 'right':
                 self.repeat_key_counter += 1
@@ -366,7 +368,7 @@ class RunExperiment:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Passed Repeat Key Threshold'])
+                filewriter.writerow(['Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Key Pressed', 'Passed Repeat Key Threshold'])
         other_choices = []
         for vals in range(0,4):
             if vals != choice:
@@ -376,7 +378,7 @@ class RunExperiment:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.write_repeat])
+            filewriter.writerow([img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.key_pressed, self.write_repeat])
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
