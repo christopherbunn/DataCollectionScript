@@ -20,29 +20,25 @@ from PIL import ImageTk, Image
 from os import listdir, path
 from os.path import isfile, join
 import os
-import re
 
 def beep():
     duration = 0.35  # second
-    freq = 440  # Hz
+    freq = 240  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
 
-def high_beep():
+def left_beep():
+    duration = 0.5  # second
+    freq = 640  # Hz
+    os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+    time.sleep(1)
+    os.system('say next image')
+    
+def right_beep():
     duration = 0.5  # second
     freq = 540  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
     time.sleep(1)
     os.system('say next image')
-
-
-def read_label(left_label, right_label):
-    beep()
-    time.sleep(0.6)
-    os.system('say ' + 'left: ' + left_label.replace('\'', '\\\''))
-    time.sleep(1)
-    beep()
-    time.sleep(0.6)
-    os.system('say ' + 'right: ' + right_label.replace('\'', '\\\''))
 
 
 class SetParameters:
@@ -151,7 +147,55 @@ class RunExperiment:
         for label_l in chosen_labels:
             for label_r in chosen_labels:
                 if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
-                    self.label_pairs.add((image, label_l, label_r))
+                    self.label_pairs.add((image, label_l, label_r, True, False, False)) #img, l, r, is_trial, is_control_1, is_control_2
+
+    def get_nonsense_list(self, num_of_nonsense):
+        nonsense = ["TEST TEST 1", "TEST TEST 2", "TEST TEST 3"] # Insert reading nonsense
+        final_list = []
+        while len(final_list) < num_of_nonsense:
+            final_list.append(random.choice(nonsense))
+        return final_list
+
+    def add_control_cases(self):
+        rev_pairs = []
+        nonsense_pairs = []
+        # Reverse pair - 10% - Control 1
+        num_rev_pairs = len(self.label_pairs) * 0.1
+        while len(rev_pairs) < num_rev_pairs:
+            old_pair = self.label_pairs.pop()
+            new_pair = (old_pair[0],old_pair[2], old_pair[1], False, True, False)
+            rev_pairs.append(new_pair)
+            self.label_pairs.add(old_pair)
+        # Nonsense pair - 5% - Control 2
+        num_nonsense_pairs = len(self.label_pairs) * 0.05
+        new_labels = self.get_nonsense_list(num_nonsense_pairs)
+        left_nonsense_pair = num_nonsense_pairs / 2
+        right_nonsense_pair = num_nonsense_pairs - left_nonsense_pair
+        while len(nonsense_pairs) < num_nonsense_pairs:
+            old_pair = self.label_pairs.pop()
+            if left_nonsense_pair > 0: # Left
+                new_pair = (old_pair[0], random.choice(new_labels), old_pair[2], False, False, True)
+                left_nonsense_pair -= 1
+            else: #Right
+                old_pair = self.label_pairs.pop()
+                new_pair = (old_pair[0], old_pair[1], random.choice(new_labels), False, False, True)
+                right_nonsense_pair -= 1
+            nonsense_pairs.append(new_pair)
+            self.label_pairs.add(old_pair)
+        for new_pairs in rev_pairs:
+            self.label_pairs.add(new_pairs)
+        for new_pairs in nonsense_pairs:
+            self.label_pairs.add(new_pairs)
+
+
+    def read_label(self, event=None):
+        beep()
+        time.sleep(0.6)
+        os.system('say ' + 'left: ' + self.left_label.replace('\'', '\\\''))
+        time.sleep(1)
+        beep()
+        time.sleep(0.6)
+        os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
 
     def run_trial(self, params):
         img_frame = ttk.Frame(self.window)
@@ -160,7 +204,10 @@ class RunExperiment:
         button_frame = ttk.Frame(self.window)
         button_frame.pack()
 
-        self.curr_image_name, left_label, right_label = self.label_pairs.pop();
+        curr_label_pair = self.label_pairs.pop();
+        self.curr_image_name = curr_label_pair[0]
+        self.left_label = curr_label_pair[1]
+        self.right_label = curr_label_pair[2]
 
         self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(), height=self.my_images[self.curr_image_name].height())
         self.img_canvas.pack()
@@ -170,39 +217,45 @@ class RunExperiment:
         font = "Courier"
         font_size = 30
         top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
-        self.top_left_bttn = tkinter.Button(button_frame, text=left_label, command=top_left_act, font=(font, font_size))
+        self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=top_left_act, font=(font, font_size))
         self.top_left_bttn.pack()
         self.window.bind("q",top_left_act)
 
         top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
-        self.top_right_bttn = tkinter.Button(button_frame, text=right_label, command=top_right_act, font=(font, font_size))
+        self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=top_right_act, font=(font, font_size))
         self.top_right_bttn.pack()
         self.window.bind("p",top_right_act)
+        self.window.bind("<space>", self.read_label)
         self.window.tkraise()
         self.window.update()
-        read_label(left_label, right_label)
+        self.read_label()
+        self.start_time = time.time()
         self.window.mainloop()
 
     def choose_string(self, img_name, pressed, res_path, event=None):
-        high_beep()
-        choice = ""
-        alternative = ""
+        self.end_time = time.time()
         if pressed == 'left':
+            left_beep()
             choice = self.top_left_bttn['text']
             alternative = self.top_right_bttn['text']
         else:
+            right_beep()
             choice = self.top_right_bttn['text']
             alternative = self.top_left_bttn['text']
         self.write_entry(res_path, self.curr_image_name, choice, alternative)
         if len(self.label_pairs) == 0:
             self.window.destroy()
         else:
-            self.curr_image_name, left_label, right_label = self.label_pairs.pop();
+            curr_label_pair = self.label_pairs.pop();
+            self.curr_image_name = curr_label_pair[0]
+            self.left_label = curr_label_pair[1]
+            self.right_label = curr_label_pair[2]
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
-            self.top_left_bttn.configure(text=left_label)
-            self.top_right_bttn.configure(text=right_label)
+            self.top_left_bttn.configure(text=self.left_label)
+            self.top_right_bttn.configure(text=self.right_label)
             self.window.update()
-            read_label(left_label, right_label)
+            self.read_label()
+            self.start_time = time.time()
 
 
     def write_entry(self, res_path, img_name, choice, alternative):
@@ -251,12 +304,13 @@ class RunExperiment:
             full_path = params.img_path + '/' + image
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
             self.get_labels(image)
+        self.add_control_cases()
         self.run_trial(params)
 
 #Set parameters:
 params = SetParameters()
 
-ReadInstructions()
+# ReadInstructions()
 #Run experiment:
 print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
