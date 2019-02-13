@@ -421,8 +421,8 @@ class RunExperiment:
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
-            reader = csv.reader(f) # CSV File
-            # reader = csv.reader(f, delimiter='\t')
+            # reader = csv.reader(f) # CSV File
+            reader = csv.reader(f, delimiter='\t')
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -461,7 +461,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-# ReadInstructions()
+ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
