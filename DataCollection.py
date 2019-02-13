@@ -8,7 +8,20 @@ from PIL import ImageTk, Image
 from os import listdir, path
 from os.path import isfile, join
 import os
+import datetime
 
+left_key = "f"
+right_key = "j"
+repeat_key = "<space>"
+continue_key = "<space>"
+max_repeat = 10
+# reverse_percentage = 0.10
+# nonsense_percentage = 0.05
+reverse_percentage = 1
+nonsense_percentage = 1
+participant_name = ""
+max_num_of_random_labels = 4
+max_num_of_pairs = 6
 
 def beep():
     duration = 0.35  # second
@@ -20,16 +33,13 @@ def left_beep():
     duration = 0.5  # second
     freq = 640  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
-    time.sleep(1)
-    os.system('say next image')
+
 
 
 def right_beep():
     duration = 0.5  # second
     freq = 540  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
-    time.sleep(1)
-    os.system('say next image')
 
 
 class Entry:
@@ -60,11 +70,16 @@ class SetParameters:
         def save_parameters(*args):
             self.img_path = img_path_box.get()
             self.desc_path = desc_path_box.get()
-            self.res_path= res_path_box.get()
+            self.res_path = res_path_box.get()
+            global participant_name
+            participant_name = self.res_path
+            now = datetime.datetime.now()
+            self.res_path = self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
+                str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             self.nonsense_path = nonsense_path_box.get()
             # self.num_img = num_img_box.get()
             # self.break_size = break_box.get()
-            print(self.img_path)
+            # print(self.img_path)
             window.destroy()
 
         window = tkinter.Tk()
@@ -74,7 +89,7 @@ class SetParameters:
         frame.columnconfigure(0,weight=1)
         frame.rowconfigure(0,weight=1)
 
-        field_labels = ["Image Location", "Description Location", "Results Location", "Nonsense File Path", "Number of Images", "Break Between Images (seconds)"]
+        field_labels = ["Image Location", "Description Location", "Participant Initials", "Nonsense File Path", "Number of Images", "Break Between Images (seconds)"]
 
         img_path_box = ttk.StringVar()
         desc_path_box = ttk.StringVar()
@@ -95,7 +110,7 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[2]).grid(row=2, column=0, sticky='E')
         res_entry = tkinter.Entry(frame, textvariable=res_path_box)
-        res_entry.insert(0, 'results.csv')
+        res_entry.insert(0, 'noname')
         res_entry.grid(row=2, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
@@ -117,7 +132,7 @@ class SetParameters:
     def __init__(self):
         self.img_path = 'assets/BenchmarkIMAGES'
         self.desc_path = 'assets/descriptions.csv'
-        self.res_path = 'results.csv'
+        self.res_path = 'noname.csv'
         self.num_img = 0
         self.break_size = 0
         self.get_params()
@@ -130,7 +145,7 @@ class ReadInstructions:
         time.sleep(0.5)
         beep()
         time.sleep(0.5)
-        self.window.bind("q", self.test_left_key)
+        self.window.bind(left_key, self.test_left_key)
         os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
                             'If the left caption fits the best, press the left key. If the right caption fits the best,'
                             'press the right key. To repeat both captions, press the space bar."')
@@ -142,7 +157,7 @@ class ReadInstructions:
         time.sleep(0.5)
         left_beep()
         time.sleep(0.5)
-        self.window.bind("p", self.test_right_key)
+        self.window.bind(right_key, self.test_right_key)
         os.system('say "' + 'Now, let\s test the right key. Press the right key now."')
 
     def test_right_key(self, event=None):
@@ -150,7 +165,7 @@ class ReadInstructions:
         time.sleep(0.5)
         right_beep()
         time.sleep(0.5)
-        self.window.bind("<space>", self.test_repeat_key)
+        self.window.bind(repeat_key, self.test_repeat_key)
         os.system('say "' + 'Now, let\s test the repeat key. Press the repeat key now."')
 
     def test_repeat_key(self, event=None):
@@ -191,7 +206,7 @@ class PauseExperiment:
         self.window.tkraise()
         self.window.update()
         self.read_pause()
-        self.window.bind("<space>", self.exit_window)
+        self.window.bind(continue_key, self.exit_window)
         self.window.wait_window()
 
 
@@ -207,14 +222,17 @@ class RunExperiment:
     def get_labels(self, image):
         all_labels = self.descriptions[image]
         chosen_labels = []
-        while len(chosen_labels) < 4:
+        while len(chosen_labels) < max_num_of_random_labels:
             idx = random.randint(0,len(all_labels) - 1)
             if all_labels[idx] not in chosen_labels:
                 chosen_labels.append(all_labels[idx])
+        curr_num_of_pairs = 0
         for label_l in chosen_labels:
             for label_r in chosen_labels:
-                if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
-                    self.label_pairs.add((image, label_l, label_r, "Trial"))
+                if curr_num_of_pairs < max_num_of_pairs:
+                    if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
+                        self.label_pairs.append((image, label_l, label_r, "Trial"))
+                        curr_num_of_pairs += 1
 
     def get_nonsense_list(self, num_of_nonsense):
         nonsense = []
@@ -224,7 +242,7 @@ class RunExperiment:
         for i, sentence in enumerate(temp):
             nonsense.append(sentence[0])
         final_list = []
-        print(nonsense)
+        # print(nonsense)
         while len(final_list) < num_of_nonsense:
             final_list.append(random.choice(nonsense))
         return final_list
@@ -232,36 +250,39 @@ class RunExperiment:
     def add_control_cases(self):
         rev_pairs = []
         nonsense_pairs = []
+        print("Regular", len(self.label_pairs))
         # Reverse pair - 10% - Control 1
-        num_rev_pairs = len(self.label_pairs) * 0.1
+        num_rev_pairs = len(self.label_pairs) * reverse_percentage
         while len(rev_pairs) < num_rev_pairs:
-            old_pair = self.label_pairs.pop()
+            old_pair = random.choice(self.label_pairs)
             new_pair = (old_pair[0],old_pair[2], old_pair[1], "Reverse Control")
             rev_pairs.append(new_pair)
-            self.label_pairs.add(old_pair)
+            # self.label_pairs.append(old_pair)
+        print("Reverse Controls", len(rev_pairs))
         # Nonsense pair - 5% - Control 2
-        num_nonsense_pairs = len(self.label_pairs) * 0.05
+        num_nonsense_pairs = len(self.label_pairs) * nonsense_percentage
         new_labels = self.get_nonsense_list(num_nonsense_pairs)
         left_nonsense_pair = num_nonsense_pairs / 2
         right_nonsense_pair = num_nonsense_pairs - left_nonsense_pair
         new_labels_pos = 0
         while len(nonsense_pairs) < num_nonsense_pairs:
-            old_pair = self.label_pairs.pop()
+            old_pair = random.choice(self.label_pairs)
             if left_nonsense_pair > 0: # Left
                 new_pair = (old_pair[0], new_labels[new_labels_pos], old_pair[2], "Nonsense Control - Left")
                 left_nonsense_pair -= 1
             else: #Right
-                old_pair = self.label_pairs.pop()
                 new_pair = (old_pair[0], old_pair[1], new_labels[new_labels_pos], "Nonsense Control - Right")
                 right_nonsense_pair -= 1
             nonsense_pairs.append(new_pair)
-            self.label_pairs.add(old_pair)
+            # self.label_pairs.append(old_pair)
             new_labels_pos += 1
+        print("Nonsense Pairs", len(nonsense_pairs))
         for new_pairs in rev_pairs:
-            self.label_pairs.add(new_pairs)
+            self.label_pairs.append(new_pairs)
         for new_pairs in nonsense_pairs:
-            self.label_pairs.add(new_pairs)
-
+            self.label_pairs.append(new_pairs)
+        random.shuffle(self.label_pairs)
+        print("Total pairs: ", len(self.label_pairs))
 
     def read_label(self, event=None):
         beep()
@@ -301,7 +322,7 @@ class RunExperiment:
         top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
         self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=top_left_act, font=(font, font_size))
         self.top_left_bttn.pack()
-        self.window.bind("q",top_left_act)
+        self.window.bind(left_key,top_left_act)
 
         top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
         self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=top_right_act, font=(font, font_size))
@@ -312,21 +333,23 @@ class RunExperiment:
         self.repeat_key_counter = 0
         self.last_key = None
         self.write_repeat = False
-        self.window.bind("p",top_right_act)
-        self.window.bind("<space>", self.repeat_label)
+        self.window.bind(right_key,top_right_act)
+        self.window.bind(repeat_key, self.repeat_label)
         self.start_time = time.time()
         self.window.mainloop()
 
     def choose_string(self, img_name, pressed, res_path, event=None):
         self.end_time = time.time()
-        print(self.repeat_key_counter)
-        if self.repeat_key_counter >= 5:
+        # print(self.repeat_key_counter)
+        if self.repeat_key_counter >= max_repeat:
             PauseExperiment()
             self.repeat_key_counter = 0
             self.write_repeat = True
         if pressed == 'left':
             self.key_pressed = 'left'
             left_beep()
+            time.sleep(1)
+            os.system('say next image')
             if self.last_key == 'left':
                 self.repeat_key_counter += 1
             else:
@@ -337,6 +360,8 @@ class RunExperiment:
         else:
             self.key_pressed = 'right'
             right_beep()
+            time.sleep(1)
+            os.system('say next image')
             if self.last_key == 'right':
                 self.repeat_key_counter += 1
             else:
@@ -347,6 +372,7 @@ class RunExperiment:
         self.write_entry(res_path, self.curr_image_name, choice, alternative)
         self.write_repeat = False
         if len(self.label_pairs) == 0:
+            os.system('say " ' + "This experiment is now over. Please call over the proctor to end the session.\"")
             self.window.destroy()
         else:
             self.trial_number += 1
@@ -356,6 +382,7 @@ class RunExperiment:
             self.curr_image_name = curr_label_pair[0]
             self.left_label = curr_label_pair[1]
             self.right_label = curr_label_pair[2]
+            self.run_type = curr_label_pair[3]
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
             self.top_left_bttn.configure(text=self.left_label)
             self.top_right_bttn.configure(text=self.right_label)
@@ -368,17 +395,17 @@ class RunExperiment:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Key Pressed', 'Passed Repeat Key Threshold'])
+                filewriter.writerow(['Participant Initials', 'Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Key Pressed', 'Passed Repeat Key Threshold'])
         other_choices = []
         for vals in range(0,4):
             if vals != choice:
                 other_choices.append(vals)
-        print(res_path, other_choices)
+        # print(res_path, other_choices)
         with open(res_path, 'a') as csvfile:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.key_pressed, self.write_repeat])
+            filewriter.writerow([participant_name, img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.key_pressed, self.write_repeat])
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
@@ -394,7 +421,7 @@ class RunExperiment:
                         self.descriptions[file_name] = list()
                     if j != 0 and value != '':
                         self.descriptions[file_name].append(value)
-        print(self.descriptions)
+        # print(self.descriptions)
 
     def __init__(self, params):
         self.descriptions = {}
@@ -406,10 +433,10 @@ class RunExperiment:
         self.read_desc(params)
         self.my_images = dict()
         self.my_image_names = []
-        self.label_pairs = set()
+        self.label_pairs = list()
         self.nonsense_path = params.nonsense_path
         self.trial_number = 1
-        print(self.image_files)
+        # print(self.image_files)
         for image in self.image_files:
             full_path = params.img_path + '/' + image
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
@@ -420,7 +447,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-ReadInstructions()
+# ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
