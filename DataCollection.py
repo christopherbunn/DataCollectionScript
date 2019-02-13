@@ -15,10 +15,8 @@ right_key = "j"
 repeat_key = "<space>"
 continue_key = "<space>"
 max_repeat = 10
-# reverse_percentage = 0.10
-# nonsense_percentage = 0.05
-reverse_percentage = 1
-nonsense_percentage = 1
+reverse_percentage = 0.10
+nonsense_percentage = 0.05
 participant_name = ""
 max_num_of_random_labels = 4
 max_num_of_pairs = 6
@@ -293,6 +291,20 @@ class RunExperiment:
         time.sleep(0.6)
         os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
 
+    def ignore(self, event=None):
+        #Do nothing...
+        print("Key is locked, try again once prompt is over")
+        return "break"
+
+    def lock_key(self, event=None):
+        self.window.bind(left_key, self.ignore)
+        self.window.bind(right_key, self.ignore)
+        self.window.bind(repeat_key, self.ignore)
+
+    def unlock_key(self, event=None):
+        self.window.bind(left_key, self.top_left_act)
+        self.window.bind(right_key, self.top_right_act)
+        self.window.bind(repeat_key, self.repeat_label)
 
     def repeat_label(self, event=None):
         self.repeat_counter += 1
@@ -319,13 +331,12 @@ class RunExperiment:
 
         font = "Courier"
         font_size = 30
-        top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
-        self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=top_left_act, font=(font, font_size))
+        self.top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
+        self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=self.top_left_act, font=(font, font_size))
         self.top_left_bttn.pack()
-        self.window.bind(left_key,top_left_act)
 
-        top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
-        self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=top_right_act, font=(font, font_size))
+        self.top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
+        self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=self.top_right_act, font=(font, font_size))
         self.top_right_bttn.pack()
         self.window.tkraise()
         self.window.update()
@@ -333,13 +344,13 @@ class RunExperiment:
         self.repeat_key_counter = 0
         self.last_key = None
         self.write_repeat = False
-        self.window.bind(right_key,top_right_act)
-        self.window.bind(repeat_key, self.repeat_label)
+        self.unlock_key()
         self.start_time = time.time()
         self.window.mainloop()
 
     def choose_string(self, img_name, pressed, res_path, event=None):
         self.end_time = time.time()
+        self.lock_key()
         # print(self.repeat_key_counter)
         if self.repeat_key_counter >= max_repeat:
             PauseExperiment()
@@ -388,6 +399,7 @@ class RunExperiment:
             self.top_right_bttn.configure(text=self.right_label)
             self.window.update()
             self.read_label()
+            self.unlock_key()
             self.start_time = time.time()
 
     def write_entry(self, res_path, img_name, choice, alternative):
@@ -409,7 +421,8 @@ class RunExperiment:
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
-            reader = csv.reader(f)
+            reader = csv.reader(f) # CSV File
+            # reader = csv.reader(f, delimiter='\t')
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -427,6 +440,7 @@ class RunExperiment:
         self.descriptions = {}
         self.image_files = list()
         self.window = tkinter.Tk()
+        self.lock_key()
         w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
         self.window.geometry("%dx%d+0+0" % (w, h))
         # self.read_image_names(params)
