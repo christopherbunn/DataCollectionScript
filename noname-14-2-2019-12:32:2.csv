@@ -1,0 +1,9 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,tan children with black hair,South Asian children in school uniforms,0.009,0,Trial,left,False
+noname,i295.jpg, tiny building behind school children,happy children waving and smiling,3.974,0,Reverse Control,left,False
+noname,i295.jpg,cows produce milk,South Asian children in school uniforms,3.699,0,Nonsense Control - Left,left,False
+noname,i295.jpg,South Asian children in school uniforms,happy children waving and smiling,0.006,0,Trial,right,False
+noname,i295.jpg,happy children waving and smiling,tan children with black hair,31.196,0,Trial,right,False
+noname,i295.jpg,tan children with black hair, tiny building behind school children,2.567,0,Trial,left,False
+noname,i295.jpg, tiny building behind school children,happy children waving and smiling,2.952,0,Trial,right,False
+noname,i295.jpg,tan children with black hair,happy children waving and smiling,0.002,0,Trial,right,False

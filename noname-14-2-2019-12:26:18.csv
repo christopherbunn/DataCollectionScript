@@ -1,0 +1,9 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,South Asian children in school uniforms,tempratures in the america are in fahrenheit,1.439,0,Nonsense Control - Left,right,False
+noname,i295.jpg,Asian boy jumping in air,side mirror of car in corner,0.002,0,Trial,right,False
+noname,i295.jpg,happy children waving and smiling,Asian boy jumping in air,0.002,0,Trial,right,False
+noname,i295.jpg,Asian boy jumping in air,happy children waving and smiling,0.242,0,Reverse Control,right,False
+noname,i295.jpg,Asian boy jumping in air,side mirror of car in corner,5.978,0,Trial,left,False
+noname,i295.jpg,South Asian children in school uniforms,side mirror of car in corner,0.001,0,Trial,right,False
+noname,i295.jpg,happy children waving and smiling,side mirror of car in corner,0.002,0,Trial,right,False
+noname,i295.jpg,South Asian children in school uniforms,Asian boy jumping in air,0.005,0,Trial,right,False

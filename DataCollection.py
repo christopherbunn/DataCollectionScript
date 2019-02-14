@@ -20,6 +20,7 @@ nonsense_percentage = 0.05
 participant_name = ""
 max_num_of_random_labels = 4
 max_num_of_pairs = 6
+beep_duration = .2
 
 def beep():
     duration = 0.35  # second
@@ -28,14 +29,14 @@ def beep():
 
 
 def left_beep():
-    duration = 0.5  # second
+    duration = beep_duration  # second
     freq = 640  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
 
 
 
 def right_beep():
-    duration = 0.5  # second
+    duration = beep_duration  # second
     freq = 540  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
 
@@ -98,12 +99,12 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[0]).grid(row=0, column=0, sticky='E')
         img_entry = tkinter.Entry(frame, textvariable=img_path_box)
-        img_entry.insert(0,'assets/BenchmarkIMAGES')
+        img_entry.insert(0,'../New_Assets/Images/BenchmarkIMAGES')
         img_entry.grid(row=0, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[1]).grid(row=1, column=0, sticky='E')
         desc_entry = tkinter.Entry(frame, textvariable=desc_path_box)
-        desc_entry.insert(0, 'assets/descriptions.csv')
+        desc_entry.insert(0, '../New_Assets/Descriptions/training.tsv')
         desc_entry.grid(row=1, column=1,sticky='W')
 
         tkinter.Label(frame, text=field_labels[2]).grid(row=2, column=0, sticky='E')
@@ -113,7 +114,7 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
         nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
-        nonsense_entry.insert(0, 'assets/nonsense.csv')
+        nonsense_entry.insert(0, '../New_Assets/facts.tsv')
         nonsense_entry.grid(row=3, column=1, sticky='W')
 
         # tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
@@ -130,7 +131,7 @@ class SetParameters:
     def __init__(self):
         self.img_path = 'assets/BenchmarkIMAGES'
         self.desc_path = 'assets/descriptions.csv'
-        self.res_path = 'noname.csv'
+        self.res_path = '../Results/noname.csv'
         self.num_img = 0
         self.break_size = 0
         self.get_params()
@@ -184,7 +185,7 @@ class ReadInstructions:
         label.pack()
         self.window.tkraise()
         self.window.update()
-        self.read_instructions()
+        #self.read_instructions()
         self.window.bind("<space>", self.exit_window)
 
         self.window.mainloop()
@@ -283,11 +284,11 @@ class RunExperiment:
         print("Total pairs: ", len(self.label_pairs))
 
     def read_label(self, event=None):
-        beep()
+        #beep()
         time.sleep(0.6)
         os.system('say ' + 'left: ' + self.left_label.replace('\'', '\\\''))
         time.sleep(1)
-        beep()
+        #beep()
         time.sleep(0.6)
         os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
 

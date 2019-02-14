@@ -1,0 +1,9 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,Asian boy jumping in air,old,0.005,0,Trial,left,False
+noname,i295.jpg,Asian children wearing red shorts,san francisco is in california,0.006,0,Nonsense Control - Left,right,False
+noname,i295.jpg,Asian boy jumping in air,Asian children wearing red shorts,0.002,0,Reverse Control,right,False
+noname,i295.jpg,Asian boy jumping in air,children in white and red uniforms,0.002,0,Trial,right,False
+noname,i295.jpg,Asian children wearing red shorts,Asian boy jumping in air,0.002,0,Trial,right,False
+noname,i295.jpg,children in white and red uniforms,Asian boy jumping in air,0.646,0,Trial,right,False
+noname,i295.jpg,old,children in white and red uniforms,0.007,0,Trial,right,False
+noname,i295.jpg,Asian children wearing red shorts,children in white and red uniforms,0.751,0,Trial,right,False
