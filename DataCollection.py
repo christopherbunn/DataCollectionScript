@@ -75,9 +75,6 @@ class SetParameters:
             self.res_path = self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             self.nonsense_path = nonsense_path_box.get()
-            # self.num_img = num_img_box.get()
-            # self.break_size = break_box.get()
-            # print(self.img_path)
             window.destroy()
 
         window = tkinter.Tk()
@@ -115,14 +112,6 @@ class SetParameters:
         nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
         nonsense_entry.insert(0, 'assets/nonsense.csv')
         nonsense_entry.grid(row=3, column=1, sticky='W')
-
-        # tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
-        # num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
-        # num_img_entry.grid(row=4, column=1,sticky='W')
-        #
-        # tkinter.Label(frame, text=field_labels[5]).grid(row=5, column=0, sticky='E')
-        # break_entry = tkinter.Entry(frame, textvariable=break_box)
-        # break_entry.grid(row=5, column=1,sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
         window.mainloop()
@@ -189,6 +178,7 @@ class ReadInstructions:
 
         self.window.mainloop()
 
+
 class PauseExperiment:
     def read_pause(self):
         os.system("say \"This experiment has been paused. Please contact the proctor for assistance.\"")
@@ -208,7 +198,7 @@ class PauseExperiment:
         self.window.wait_window()
 
 
-class RunExperiment:
+class RunExperimentImages:
     # def read_image_names(self,params):
     #     self.image_files = list()
     #     for file in listdir(params.img_path):
@@ -458,11 +448,254 @@ class RunExperiment:
         self.add_control_cases()
         self.run_trial(params)
 
+
+class RunExperimentVideo:
+
+    def get_labels(self, image):
+        all_labels = self.descriptions[image]
+        chosen_labels = []
+        while len(chosen_labels) < max_num_of_random_labels:
+            idx = random.randint(0,len(all_labels) - 1)
+            if all_labels[idx] not in chosen_labels:
+                chosen_labels.append(all_labels[idx])
+        curr_num_of_pairs = 0
+        for label_l in chosen_labels:
+            for label_r in chosen_labels:
+                if curr_num_of_pairs < max_num_of_pairs:
+                    if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
+                        self.label_pairs.append((image, label_l, label_r, "Trial"))
+                        curr_num_of_pairs += 1
+
+    def get_nonsense_list(self, num_of_nonsense):
+        nonsense = []
+        with open(self.nonsense_path, 'r') as f:
+            reader = csv.reader(f)
+            temp = list(reader)
+        for i, sentence in enumerate(temp):
+            nonsense.append(sentence[0])
+        final_list = []
+        # print(nonsense)
+        while len(final_list) < num_of_nonsense:
+            final_list.append(random.choice(nonsense))
+        return final_list
+
+    def add_control_cases(self):
+        rev_pairs = []
+        nonsense_pairs = []
+        print("Regular", len(self.label_pairs))
+        # Reverse pair - 10% - Control 1
+        num_rev_pairs = len(self.label_pairs) * reverse_percentage
+        while len(rev_pairs) < num_rev_pairs:
+            old_pair = random.choice(self.label_pairs)
+            new_pair = (old_pair[0],old_pair[2], old_pair[1], "Reverse Control")
+            rev_pairs.append(new_pair)
+            # self.label_pairs.append(old_pair)
+        print("Reverse Controls", len(rev_pairs))
+        # Nonsense pair - 5% - Control 2
+        num_nonsense_pairs = len(self.label_pairs) * nonsense_percentage
+        new_labels = self.get_nonsense_list(num_nonsense_pairs)
+        left_nonsense_pair = num_nonsense_pairs / 2
+        right_nonsense_pair = num_nonsense_pairs - left_nonsense_pair
+        new_labels_pos = 0
+        while len(nonsense_pairs) < num_nonsense_pairs:
+            old_pair = random.choice(self.label_pairs)
+            if left_nonsense_pair > 0: # Left
+                new_pair = (old_pair[0], new_labels[new_labels_pos], old_pair[2], "Nonsense Control - Left")
+                left_nonsense_pair -= 1
+            else: #Right
+                new_pair = (old_pair[0], old_pair[1], new_labels[new_labels_pos], "Nonsense Control - Right")
+                right_nonsense_pair -= 1
+            nonsense_pairs.append(new_pair)
+            # self.label_pairs.append(old_pair)
+            new_labels_pos += 1
+        print("Nonsense Pairs", len(nonsense_pairs))
+        for new_pairs in rev_pairs:
+            self.label_pairs.append(new_pairs)
+        for new_pairs in nonsense_pairs:
+            self.label_pairs.append(new_pairs)
+        random.shuffle(self.label_pairs)
+        print("Total pairs: ", len(self.label_pairs))
+
+    def read_label(self, event=None):
+        beep()
+        time.sleep(0.6)
+        os.system('say ' + 'left: ' + self.left_label.replace('\'', '\\\''))
+        time.sleep(1)
+        beep()
+        time.sleep(0.6)
+        os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
+
+    def ignore(self, event=None):
+        #Do nothing...
+        print("Key is locked, try again once prompt is over")
+        return "break"
+
+    def lock_key(self, event=None):
+        self.window.bind(left_key, self.ignore)
+        self.window.bind(right_key, self.ignore)
+        self.window.bind(repeat_key, self.ignore)
+
+    def unlock_key(self, event=None):
+        self.window.bind(left_key, self.top_left_act)
+        self.window.bind(right_key, self.top_right_act)
+        self.window.bind(repeat_key, self.repeat_label)
+
+    def repeat_label(self, event=None):
+        self.repeat_counter += 1
+        self.read_label()
+
+    def run_trial(self, params):
+        self.window.title("Trial " + str(self.trial_number))
+        img_frame = ttk.Frame(self.window)
+        img_frame.pack()
+
+        button_frame = ttk.Frame(self.window)
+        button_frame.pack()
+
+        curr_label_pair = self.label_pairs.pop()
+        self.curr_image_name = curr_label_pair[0]
+        self.left_label = curr_label_pair[1]
+        self.right_label = curr_label_pair[2]
+        self.run_type = curr_label_pair[3]
+
+        self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(), height=self.my_images[self.curr_image_name].height())
+        self.img_canvas.pack()
+        self.repeat_counter = 0
+        self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.curr_image_name])
+
+        font = "Courier"
+        font_size = 30
+        self.top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
+        self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=self.top_left_act, font=(font, font_size))
+        self.top_left_bttn.pack()
+
+        self.top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
+        self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=self.top_right_act, font=(font, font_size))
+        self.top_right_bttn.pack()
+        self.window.tkraise()
+        self.window.update()
+        self.read_label()
+        self.repeat_key_counter = 0
+        self.last_key = None
+        self.write_repeat = False
+        self.unlock_key()
+        self.start_time = time.time()
+        self.window.mainloop()
+
+    def choose_string(self, img_name, pressed, res_path, event=None):
+        self.end_time = time.time()
+        self.lock_key()
+        # print(self.repeat_key_counter)
+        if self.repeat_key_counter >= max_repeat:
+            PauseExperiment()
+            self.repeat_key_counter = 0
+            self.write_repeat = True
+        if pressed == 'left':
+            self.key_pressed = 'left'
+            left_beep()
+            time.sleep(1)
+            os.system('say next image')
+            if self.last_key == 'left':
+                self.repeat_key_counter += 1
+            else:
+                self.repeat_key_counter = 1
+                self.last_key = 'left'
+            choice = self.top_left_bttn['text']
+            alternative = self.top_right_bttn['text']
+        else:
+            self.key_pressed = 'right'
+            right_beep()
+            time.sleep(1)
+            os.system('say next image')
+            if self.last_key == 'right':
+                self.repeat_key_counter += 1
+            else:
+                self.repeat_key_counter = 1
+                self.last_key = 'right'
+            choice = self.top_right_bttn['text']
+            alternative = self.top_left_bttn['text']
+        self.write_entry(res_path, self.curr_image_name, choice, alternative)
+        self.write_repeat = False
+        if len(self.label_pairs) == 0:
+            os.system('say " ' + "This experiment is now over. Please call over the proctor to end the session.\"")
+            self.window.destroy()
+        else:
+            self.trial_number += 1
+            self.window.title("Trial " + str(self.trial_number))
+            self.repeat_counter = 0
+            curr_label_pair = self.label_pairs.pop();
+            self.curr_image_name = curr_label_pair[0]
+            self.left_label = curr_label_pair[1]
+            self.right_label = curr_label_pair[2]
+            self.run_type = curr_label_pair[3]
+            self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
+            self.top_left_bttn.configure(text=self.left_label)
+            self.top_right_bttn.configure(text=self.right_label)
+            self.window.update()
+            self.read_label()
+            self.unlock_key()
+            self.start_time = time.time()
+
+    def write_entry(self, res_path, img_name, choice, alternative):
+        if path.isfile(res_path) is not True:
+            with open(res_path, 'a') as csvfile:
+                filewriter = csv.writer(csvfile, delimiter=',',
+                                        quotechar='\"', quoting=csv.QUOTE_MINIMAL)
+                filewriter.writerow(['Participant Initials', 'Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Key Pressed', 'Passed Repeat Key Threshold'])
+        other_choices = []
+        for vals in range(0,4):
+            if vals != choice:
+                other_choices.append(vals)
+        # print(res_path, other_choices)
+        with open(res_path, 'a') as csvfile:
+            duration = round((self.end_time - self.start_time), 3)
+            filewriter = csv.writer(csvfile, delimiter=',',
+                                    quotechar='\"', quoting=csv.QUOTE_MINIMAL)
+            filewriter.writerow([participant_name, img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.key_pressed, self.write_repeat])
+
+    def read_desc(self, params):
+        with open(params.desc_path, 'r') as f:
+            # reader = csv.reader(f) # CSV File
+            reader = csv.reader(f, delimiter='\t')
+            temp = list(reader)
+        temp = temp[1:]  # Remove table headers
+        for i, img_entry in enumerate(temp):
+            file_name = 'i' + img_entry[0] + '.jpg'
+            if i % 2 != 1:
+                self.image_files.append(file_name)
+                for j, value in enumerate(img_entry):
+                    if j == 1:
+                        self.descriptions[file_name] = list()
+                    if j != 0 and value != '':
+                        self.descriptions[file_name].append(value)
+        # print(self.descriptions)
+
+    def __init__(self, params):
+        self.descriptions = {}
+        self.image_files = list()
+        self.window = tkinter.Tk()
+        self.lock_key()
+        w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
+        self.window.geometry("%dx%d+0+0" % (w, h))
+        # self.read_image_names(params)
+        self.read_desc(params)
+        self.my_images = dict()
+        self.my_image_names = []
+        self.label_pairs = list()
+        self.nonsense_path = params.nonsense_path
+        self.trial_number = 1
+        # print(self.image_files)
+        for image in self.image_files:
+            full_path = params.img_path + '/' + image
+            self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
+            self.get_labels(image)
+        self.add_control_cases()
+        self.run_trial(params)
+
+
 #Set parameters:
 params = SetParameters()
 
 ReadInstructions()
-#Run experiment:
-# print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
-RunExperiment(params)
+RunExperimentImages(params)
