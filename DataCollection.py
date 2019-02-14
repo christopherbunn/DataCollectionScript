@@ -12,8 +12,8 @@ import datetime
 
 left_key = "f"
 right_key = "j"
-repeat_key = "<space>"
-continue_key = "<space>"
+repeat_key = "<Key-space>"
+continue_key = "<Key-space>"
 max_repeat = 10
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
@@ -143,36 +143,39 @@ class ReadInstructions:
         time.sleep(0.5)
         beep()
         time.sleep(0.5)
-        self.window.bind(left_key, self.test_left_key)
         os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
                             'If the left caption fits the best, press the left key. If the right caption fits the best,'
                             'press the right key. To repeat both captions, press the space bar."')
         time.sleep(1)
         os.system('say "' + 'Before we start, let\'s test the keys.'
                             'Press the left key now"')
+        self.window.bind(left_key, self.test_left_key)
+
     def test_left_key(self, event=None):
+        self.window.bind(left_key, self.ignore)
         os.system('say "' + 'You have just pressed the left key. When you select the left key, this tone will sound:"')
         time.sleep(0.5)
         left_beep()
         time.sleep(0.5)
-        self.window.bind(right_key, self.test_right_key)
         os.system('say "' + 'Now, let\s test the right key. Press the right key now."')
+        self.window.bind(right_key, self.test_right_key)
 
     def test_right_key(self, event=None):
+        self.window.bind(right_key, self.ignore)
         os.system('say "' + 'You have just pressed the right key. When you select the right key, this tone will sound:"')
         time.sleep(0.5)
         right_beep()
         time.sleep(0.5)
-        self.window.bind(repeat_key, self.test_repeat_key)
         os.system('say "' + 'Now, let\s test the repeat key. Press the repeat key now."')
+        self.window.bind(repeat_key, self.test_repeat_key)
 
     def test_repeat_key(self, event=None):
+        self.window.bind("<space>", self.ignore)
         os.system('say "' + 'You have just pressed the repeat key'
                             ' When this key is pressed, the description will repeat."')
         time.sleep(0.5)
-        self.window.bind("<space>", self.exit_window)
         os.system('say "' + 'You are now ready to start the experiment. Press the space key to begin"')
-
+        self.window.bind("<space>", self.exit_window)
 
     def exit_window(self, event):
         self.window.destroy()
@@ -185,8 +188,6 @@ class ReadInstructions:
         self.window.tkraise()
         self.window.update()
         self.read_instructions()
-        self.window.bind("<space>", self.exit_window)
-
         self.window.mainloop()
 
 class PauseExperiment:
@@ -291,9 +292,9 @@ class RunExperiment:
         time.sleep(0.6)
         os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
 
-    def ignore(self, event=None):
+    def ignore(self, event):
         #Do nothing...
-        print("Key is locked, try again once prompt is over")
+        print("Keys are locked - ignore key presses")
         return "break"
 
     def lock_key(self, event=None):
@@ -344,7 +345,7 @@ class RunExperiment:
         self.repeat_key_counter = 0
         self.last_key = None
         self.write_repeat = False
-        self.unlock_key()
+        self.window.after(50, self.unlock_key)
         self.start_time = time.time()
         self.window.mainloop()
 
@@ -399,7 +400,7 @@ class RunExperiment:
             self.top_right_bttn.configure(text=self.right_label)
             self.window.update()
             self.read_label()
-            self.unlock_key()
+            self.window.after(50, self.unlock_key)
             self.start_time = time.time()
 
     def write_entry(self, res_path, img_name, choice, alternative):
@@ -421,8 +422,8 @@ class RunExperiment:
 
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
-            # reader = csv.reader(f) # CSV File
-            reader = csv.reader(f, delimiter='\t')
+            reader = csv.reader(f) # CSV File
+            # reader = csv.reader(f, delimiter='\t')
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -461,7 +462,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-ReadInstructions()
+# ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
