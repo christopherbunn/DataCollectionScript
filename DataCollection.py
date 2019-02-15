@@ -155,14 +155,14 @@ class ReadInstructions:
 
 
     def read_instructions(self):
-        # os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
-        #                     'with the photo. Before each caption is read, this tone will sound. "')
+        os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
+                            'with the photo. Before each caption is read, this tone will sound. "')
         time.sleep(0.5)
         beep()
         time.sleep(0.5)
-        # os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
-        #                     'If the left caption fits the best, press the left key. If the right caption fits the best,'
-        #                     'press the right key. To repeat both captions, press the space bar."')
+        os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
+                            'If the left caption fits the best, press the left key. If the right caption fits the best,'
+                            'press the right key. To repeat both captions, press the space bar."')
         time.sleep(1)
         os.system('say "' + 'Before we start, let\'s test the keys.'
                             'Press the left key now"')
@@ -305,6 +305,7 @@ class RunExperiment:
         print("Total pairs: ", len(self.label_pairs))
 
     def read_label(self, event=None):
+        self.lock_key()
         beep()
         time.sleep(0.6)
         os.system('say ' + 'left: ' + self.left_label.replace('\'', '\\\''))
@@ -312,6 +313,7 @@ class RunExperiment:
         beep()
         time.sleep(0.6)
         os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
+        self.window.after(50, self.unlock_key)
 
     def ignore(self, event):
         #Do nothing...
@@ -483,7 +485,6 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
