@@ -137,19 +137,37 @@ class SetParameters:
 
 
 class ReadInstructions:
+    def ignore(self, event):
+        #Do nothing...
+        print("Keys are locked - ignore key presses")
+        return "break"
+
+    def bind_keys(self):
+        which_key = self.which_key
+        if which_key == 'left':
+            self.window.bind(left_key, self.test_left_key)
+        elif which_key == 'right':
+            self.window.bind(right_key, self.test_right_key)
+        elif which_key == 'repeat':
+            self.window.bind(repeat_key, self.test_repeat_key)
+        elif which_key == 'exit':
+            self.window.bind("<space>", self.exit_window)
+
+
     def read_instructions(self):
-        os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
-                            'with the photo. Before each caption is read, this tone will sound. "')
+        # os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
+        #                     'with the photo. Before each caption is read, this tone will sound. "')
         time.sleep(0.5)
         beep()
         time.sleep(0.5)
-        os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
-                            'If the left caption fits the best, press the left key. If the right caption fits the best,'
-                            'press the right key. To repeat both captions, press the space bar."')
+        # os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
+        #                     'If the left caption fits the best, press the left key. If the right caption fits the best,'
+        #                     'press the right key. To repeat both captions, press the space bar."')
         time.sleep(1)
         os.system('say "' + 'Before we start, let\'s test the keys.'
                             'Press the left key now"')
-        self.window.bind(left_key, self.test_left_key)
+        self.which_key = 'left'
+        self.window.after(50,self.bind_keys)
 
     def test_left_key(self, event=None):
         self.window.bind(left_key, self.ignore)
@@ -158,7 +176,8 @@ class ReadInstructions:
         left_beep()
         time.sleep(0.5)
         os.system('say "' + 'Now, let\s test the right key. Press the right key now."')
-        self.window.bind(right_key, self.test_right_key)
+        self.which_key = 'right'
+        self.window.after(50, self.bind_keys)
 
     def test_right_key(self, event=None):
         self.window.bind(right_key, self.ignore)
@@ -167,7 +186,8 @@ class ReadInstructions:
         right_beep()
         time.sleep(0.5)
         os.system('say "' + 'Now, let\s test the repeat key. Press the repeat key now."')
-        self.window.bind(repeat_key, self.test_repeat_key)
+        self.which_key = 'repeat'
+        self.window.after(50, self.bind_keys)
 
     def test_repeat_key(self, event=None):
         self.window.bind("<space>", self.ignore)
@@ -175,7 +195,8 @@ class ReadInstructions:
                             ' When this key is pressed, the description will repeat."')
         time.sleep(0.5)
         os.system('say "' + 'You are now ready to start the experiment. Press the space key to begin"')
-        self.window.bind("<space>", self.exit_window)
+        self.which_key = 'exit'
+        self.window.after(50, self.bind_keys)
 
     def exit_window(self, event):
         self.window.destroy()
@@ -462,7 +483,7 @@ class RunExperiment:
 #Set parameters:
 params = SetParameters()
 
-# ReadInstructions()
+ReadInstructions()
 #Run experiment:
 # print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
 
