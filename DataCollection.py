@@ -418,8 +418,12 @@ class RunExperiment:
             self.run_type = curr_label_pair[3]
             self.window.title("Trial " + str(self.trial_number))
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
+            self.img_canvas.config(width=self.my_images[self.curr_image_name].width(),
+                                   height=self.my_images[self.curr_image_name].height())
             self.top_left_bttn.configure(text=self.left_label)
             self.top_right_bttn.configure(text=self.right_label)
+            self.top_left_bttn.pack()
+            self.top_right_bttn.pack()
             self.window.update()
             self.read_label()
             self.window.after(1, self.unlock_key)
@@ -433,10 +437,6 @@ class RunExperiment:
                 filewriter.writerow(['Participant Initials', 'Image name', 'Left Option', 'Right Option', 'Duration',
                                      'Number of Command Repeats', 'Run Type', 'Key Chosen',
                                      'Passed Repeat Key Threshold'])
-        other_choices = []
-        for vals in range(0, 4):
-            if vals != choice:
-                other_choices.append(vals)
         with open(res_path, 'a') as csvfile:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
