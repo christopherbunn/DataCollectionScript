@@ -5,8 +5,7 @@ import random
 import time
 from functools import partial
 from PIL import ImageTk, Image
-from os import listdir, path
-from os.path import isfile, join
+from os import path
 import os
 import datetime
 
@@ -31,7 +30,6 @@ def left_beep():
     duration = 0.5  # second
     freq = 640  # Hz
     os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
-
 
 
 def right_beep():
@@ -75,9 +73,6 @@ class SetParameters:
             self.res_path = self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             self.nonsense_path = nonsense_path_box.get()
-            # self.num_img = num_img_box.get()
-            # self.break_size = break_box.get()
-            # print(self.img_path)
             window.destroy()
 
         window = tkinter.Tk()
@@ -93,8 +88,6 @@ class SetParameters:
         desc_path_box = ttk.StringVar()
         res_path_box = ttk.StringVar()
         nonsense_path_box = ttk.StringVar()
-        num_img_box = ttk.IntVar()
-        break_box = ttk.IntVar()
 
         tkinter.Label(frame, text=field_labels[0]).grid(row=0, column=0, sticky='E')
         img_entry = tkinter.Entry(frame, textvariable=img_path_box)
@@ -115,14 +108,6 @@ class SetParameters:
         nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
         nonsense_entry.insert(0, 'assets/nonsense.csv')
         nonsense_entry.grid(row=3, column=1, sticky='W')
-
-        # tkinter.Label(frame, text=field_labels[4]).grid(row=4, column=0, sticky='E')
-        # num_img_entry = tkinter.Entry(frame, textvariable=num_img_box)
-        # num_img_entry.grid(row=4, column=1,sticky='W')
-        #
-        # tkinter.Label(frame, text=field_labels[5]).grid(row=5, column=0, sticky='E')
-        # break_entry = tkinter.Entry(frame, textvariable=break_box)
-        # break_entry.grid(row=5, column=1,sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
         window.mainloop()
@@ -231,14 +216,6 @@ class PauseExperiment:
 
 
 class RunExperiment:
-    # def read_image_names(self,params):
-    #     self.image_files = list()
-    #     for file in listdir(params.img_path):
-    #         if isfile(join(params.img_path, file)) and not file.startswith("."):
-    #             self.image_files.append(file)
-    #     self.image_files.sort()
-    #     print(self.image_files)
-
     def get_labels(self, image):
         all_labels = self.descriptions[image]
         chosen_labels = []
@@ -262,7 +239,6 @@ class RunExperiment:
         for i, sentence in enumerate(temp):
             nonsense.append(sentence[0])
         final_list = []
-        # print(nonsense)
         while len(final_list) < num_of_nonsense:
             final_list.append(random.choice(nonsense))
         return final_list
@@ -277,7 +253,6 @@ class RunExperiment:
             old_pair = random.choice(self.label_pairs)
             new_pair = (old_pair[0],old_pair[2], old_pair[1], "Reverse Control")
             rev_pairs.append(new_pair)
-            # self.label_pairs.append(old_pair)
         print("Reverse Controls", len(rev_pairs))
         # Nonsense pair - 5% - Control 2
         num_nonsense_pairs = len(self.label_pairs) * nonsense_percentage
@@ -294,7 +269,6 @@ class RunExperiment:
                 new_pair = (old_pair[0], old_pair[1], new_labels[new_labels_pos], "Nonsense Control - Right")
                 right_nonsense_pair -= 1
             nonsense_pairs.append(new_pair)
-            # self.label_pairs.append(old_pair)
             new_labels_pos += 1
         print("Nonsense Pairs", len(nonsense_pairs))
         for new_pairs in rev_pairs:
@@ -316,7 +290,6 @@ class RunExperiment:
         self.window.after(50, self.unlock_key)
 
     def ignore(self, event):
-        #Do nothing...
         print("Keys are locked - ignore key presses")
         return "break"
 
@@ -375,7 +348,6 @@ class RunExperiment:
     def choose_string(self, img_name, pressed, res_path, event=None):
         self.end_time = time.time()
         self.lock_key()
-        # print(self.repeat_key_counter)
         if self.repeat_key_counter >= max_repeat:
             PauseExperiment()
             self.repeat_key_counter = 0
@@ -436,7 +408,6 @@ class RunExperiment:
         for vals in range(0,4):
             if vals != choice:
                 other_choices.append(vals)
-        # print(res_path, other_choices)
         with open(res_path, 'a') as csvfile:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
@@ -446,7 +417,6 @@ class RunExperiment:
     def read_desc(self, params):
         with open(params.desc_path, 'r') as f:
             reader = csv.reader(f) # CSV File
-            # reader = csv.reader(f, delimiter='\t')
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -458,7 +428,6 @@ class RunExperiment:
                         self.descriptions[file_name] = list()
                     if j != 0 and value != '':
                         self.descriptions[file_name].append(value)
-        # print(self.descriptions)
 
     def __init__(self, params):
         self.descriptions = {}
@@ -467,14 +436,12 @@ class RunExperiment:
         self.lock_key()
         w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
         self.window.geometry("%dx%d+0+0" % (w, h))
-        # self.read_image_names(params)
         self.read_desc(params)
         self.my_images = dict()
         self.my_image_names = []
         self.label_pairs = list()
         self.nonsense_path = params.nonsense_path
         self.trial_number = 1
-        # print(self.image_files)
         for image in self.image_files:
             full_path = params.img_path + '/' + image
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
@@ -482,10 +449,7 @@ class RunExperiment:
         self.add_control_cases()
         self.run_trial(params)
 
-#Set parameters:
-params = SetParameters()
 
-#Run experiment:
-# print(params.img_path, params.desc_path, params.res_path, params.num_img, params.break_size)
+params = SetParameters()
 
 RunExperiment(params)
