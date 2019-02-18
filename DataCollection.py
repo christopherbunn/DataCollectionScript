@@ -14,7 +14,9 @@ left_key = "f"
 right_key = "j"
 repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
-max_repeat = 10
+pause_experiment_key = "<Return>"
+result_directory = "./"
+max_repeat = 2
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
 participant_name = ""
@@ -73,7 +75,7 @@ class SetParameters:
             self.nonsense_path = nonsense_path_box.get()
             participant_name = res_path_box.get()
             now = datetime.datetime.now()
-            self.res_path = self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
+            self.res_path = result_directory + self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             window.destroy()
 
@@ -118,7 +120,7 @@ class SetParameters:
     def __init__(self):
         self.img_path = 'assets/BenchmarkIMAGES'
         self.desc_path = 'assets/descriptions.csv'
-        self.res_path = 'noname.csv'
+        self.res_path = 'noname'
         self.num_img = 0
         self.break_size = 0
         self.get_params()
@@ -200,20 +202,32 @@ class ReadInstructions:
 
 class PauseExperiment:
     @staticmethod
-    def read_pause():
+    def read_repeats_pause():
         say('This experiment has been paused. Please contact the proctor for assistance.')
 
+    @staticmethod
+    def read_break_pause():
+        say('This experiment has been paused for a break. Notify the proctor to resume the experiment')
+
     def exit_window(self, event):
+        say('This trial will now be resumed')
         self.window.destroy()
 
-    def __init__(self):
+    def __init__(self, type):
         self.window = tkinter.Tk()
         self.window.title("Pause Experiment")
-        label = ttk.Label(self.window, text="PAUSING EXPERIMENT")
-        label.pack()
-        self.window.tkraise()
-        self.window.update()
-        self.read_pause()
+        if type == 'repeats':
+            label = ttk.Label(self.window, text="PAUSING EXPERIMENT -- TOO MANY REPEATS")
+            label.pack()
+            self.window.tkraise()
+            self.window.update()
+            self.read_repeats_pause()
+        elif type == 'break':
+            label = ttk.Label(self.window, text="PAUSING EXPERIMENT -- REGULAR BREAK")
+            label.pack()
+            self.window.tkraise()
+            self.window.update()
+            self.read_break_pause()
         self.window.bind(continue_key, self.exit_window)
         self.window.wait_window()
 
@@ -224,15 +238,27 @@ class RunExperiment:
         print("Keys are locked - ignore key presses")
         return "break"
 
+    def take_break(self, event):
+        start = time.time()
+        PauseExperiment('break')
+        end = time.time()
+        duration = round(end - start, 3)
+        with open(self.res_path, 'a') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',',
+                                    quotechar='\"', quoting=csv.QUOTE_MINIMAL)
+            filewriter.writerow(["Took break. Length - " + str(duration)])
+
     def lock_key(self, event=None):
         self.window.bind(left_key, self.ignore)
         self.window.bind(right_key, self.ignore)
         self.window.bind(repeat_key, self.ignore)
+        self.window.bind(pause_experiment_key, self.ignore)
 
     def unlock_key(self, event=None):
         self.window.bind(left_key, self.top_left_act)
         self.window.bind(right_key, self.top_right_act)
         self.window.bind(repeat_key, self.repeat_label)
+        self.window.bind(pause_experiment_key, self.take_break)
 
     def get_labels(self, image):
         all_labels = self.descriptions[image]
@@ -360,7 +386,7 @@ class RunExperiment:
         self.end_time = time.time()
         self.lock_key()
         if self.repeat_key_counter >= max_repeat:
-            PauseExperiment()
+            PauseExperiment('repeats')
             self.repeat_key_counter = 0
             self.write_repeat = True
         self.key_pressed = pressed
@@ -393,8 +419,12 @@ class RunExperiment:
             self.run_type = curr_label_pair[3]
             self.window.title("Trial " + str(self.trial_number))
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
+            self.img_canvas.config(width=self.my_images[self.curr_image_name].width(),
+                                   height=self.my_images[self.curr_image_name].height())
             self.top_left_bttn.configure(text=self.left_label)
             self.top_right_bttn.configure(text=self.right_label)
+            self.top_left_bttn.pack()
+            self.top_right_bttn.pack()
             self.window.update()
             self.read_label()
             self.window.after(1, self.unlock_key)
@@ -405,23 +435,24 @@ class RunExperiment:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Participant Initials', 'Image name', 'Choice', 'Alternative', 'Duration',
-                                     'Number of Command Repeats', 'Run Type', 'Key Pressed',
+                filewriter.writerow(['Participant Initials', 'Image name', 'Left Option', 'Right Option', 'Duration',
+                                     'Number of Command Repeats', 'Run Type', 'Key Chosen',
                                      'Passed Repeat Key Threshold'])
-        other_choices = []
-        for vals in range(0, 4):
-            if vals != choice:
-                other_choices.append(vals)
         with open(res_path, 'a') as csvfile:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([participant_name, img_name, choice, alternative, duration, self.repeat_label_counter,
-                                 self.run_type, self.key_pressed, self.write_repeat])
+            if self.key_pressed == 'left':
+                filewriter.writerow([participant_name, img_name, choice, alternative, duration,
+                                     self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
+            elif self.key_pressed == 'right':
+                filewriter.writerow([participant_name, img_name, alternative, choice, duration,
+                                     self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
 
     def read_desc(self, desc_path):
         with open(desc_path, 'r') as f:
-            reader = csv.reader(f)  # CSV File
+            reader = csv.reader(f, delimiter='\t') # TSV File
+            # reader = csv.reader(f)  # CSV File
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -441,6 +472,7 @@ class RunExperiment:
         self.lock_key()
         self.window.geometry("%dx%d+0+0" % (self.window.winfo_screenwidth(), self.window.winfo_screenheight()))
         self.read_desc(in_params.desc_path)
+        self.res_path = in_params.res_path
         self.my_images = dict()
         self.label_pairs = list()
         self.trial_number = 1
@@ -471,5 +503,5 @@ class RunExperiment:
 
 
 params = SetParameters()
-# ReadInstructions()
+ReadInstructions()
 RunExperiment(params)
