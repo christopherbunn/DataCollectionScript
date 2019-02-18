@@ -9,6 +9,7 @@ from os import path
 import os
 import datetime
 
+## Experiement Global Variables - Should be consistent between runs
 left_key = "f"
 right_key = "j"
 repeat_key = "<Key-space>"
@@ -20,22 +21,24 @@ participant_name = ""
 max_num_of_random_labels = 4
 max_num_of_pairs = 6
 
-def beep():
-    duration = 0.35  # second
-    freq = 240  # Hz
-    os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+
+def beep(type=None):
+    if type == "left":
+        duration = 0.5  # second
+        freq = 640  # Hz
+        os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+    elif type == "right":
+        duration = 0.5  # second
+        freq = 540  # Hz
+        os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+    else:
+        duration = 0.35  # second
+        freq = 240  # Hz
+        os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
 
 
-def left_beep():
-    duration = 0.5  # second
-    freq = 640  # Hz
-    os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
-
-
-def right_beep():
-    duration = 0.5  # second
-    freq = 540  # Hz
-    os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+def say(text_to_say=None):
+    os.system('say "' + text_to_say + ' "')
 
 
 class Entry:
@@ -122,8 +125,7 @@ class SetParameters:
 
 
 class ReadInstructions:
-    def ignore(self, event):
-        #Do nothing...
+    def ignore(self, event=None):
         print("Keys are locked - ignore key presses")
         return "break"
 
@@ -138,56 +140,54 @@ class ReadInstructions:
         elif which_key == 'exit':
             self.window.bind("<space>", self.exit_window)
 
-
     def read_instructions(self):
-        os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
-                            'with the photo. Before each caption is read, this tone will sound. "')
+        say('A series of photos will be shown. Each photo will have two captions associated with the photo. '
+            'Before each caption is read, this tone will sound. ')
         time.sleep(0.5)
         beep()
         time.sleep(0.5)
-        os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
-                            'If the left caption fits the best, press the left key. If the right caption fits the best,'
-                            'press the right key. To repeat both captions, press the space bar."')
+        say('Each caption will be denoted with left or right at the beginning. '
+            'If the left caption fits the best, press the left key. If the right caption fits the best,'
+            'press the right key. To repeat both captions, press the space bar.')
         time.sleep(1)
-        os.system('say "' + 'Before we start, let\'s test the keys.'
-                            'Press the left key now"')
+        say('Before we start, let\'s test the keys. Press the left key now')
         self.which_key = 'left'
-        self.window.after(50,self.bind_keys)
+        self.window.after(1,self.bind_keys)
 
     def test_left_key(self, event=None):
         self.window.bind(left_key, self.ignore)
-        os.system('say "' + 'You have just pressed the left key. When you select the left key, this tone will sound:"')
+        say('You have just pressed the left key. When you select the left key, this tone will sound:')
         time.sleep(0.5)
-        left_beep()
+        beep('left')
         time.sleep(0.5)
-        os.system('say "' + 'Now, let\s test the right key. Press the right key now."')
+        say('Now, let\'s test the right key. Press the right key now.')
         self.which_key = 'right'
-        self.window.after(50, self.bind_keys)
+        self.window.after(1, self.bind_keys)
 
     def test_right_key(self, event=None):
         self.window.bind(right_key, self.ignore)
-        os.system('say "' + 'You have just pressed the right key. When you select the right key, this tone will sound:"')
+        say('You have just pressed the right key. When you select the right key, this tone will sound:')
         time.sleep(0.5)
-        right_beep()
+        beep('right')
         time.sleep(0.5)
-        os.system('say "' + 'Now, let\s test the repeat key. Press the repeat key now."')
+        say('Now, let\'s test the repeat key. Press the repeat key now.')
         self.which_key = 'repeat'
-        self.window.after(50, self.bind_keys)
+        self.window.after(1, self.bind_keys)
 
     def test_repeat_key(self, event=None):
         self.window.bind("<space>", self.ignore)
-        os.system('say "' + 'You have just pressed the repeat key'
-                            ' When this key is pressed, the description will repeat."')
+        say('You have just pressed the repeat key. When this key is pressed, the description will repeat.')
         time.sleep(0.5)
-        os.system('say "' + 'You are now ready to start the experiment. Press the space key to begin"')
+        say('You are now ready to start the experiment. Press the space key to begin')
         self.which_key = 'exit'
-        self.window.after(50, self.bind_keys)
+        self.window.after(1, self.bind_keys)
 
     def exit_window(self, event):
         self.window.destroy()
 
     def __init__(self):
         self.window = tkinter.Tk()
+        self.which_key = ''
         self.window.title("Read Instructions")
         label = ttk.Label(self.window, text="SPEAKING INSTRUCTIONS, PRESS SPACE TO CONTINUE")
         label.pack()
@@ -196,9 +196,10 @@ class ReadInstructions:
         self.read_instructions()
         self.window.mainloop()
 
+
 class PauseExperiment:
     def read_pause(self):
-        os.system("say \"This experiment has been paused. Please contact the proctor for assistance.\"")
+        say('This experiment has been paused. Please contact the proctor for assistance.')
 
     def exit_window(self, event):
         self.window.destroy()
@@ -282,12 +283,12 @@ class RunExperiment:
         self.lock_key()
         beep()
         time.sleep(0.6)
-        os.system('say ' + 'left: ' + self.left_label.replace('\'', '\\\''))
+        say('left: ' + self.left_label.replace('\'', '\\\''))
         time.sleep(1)
         beep()
         time.sleep(0.6)
-        os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
-        self.window.after(50, self.unlock_key)
+        say('right: ' + self.right_label.replace('\'', '\\\''))
+        self.window.after(1, self.unlock_key)
 
     def ignore(self, event):
         print("Keys are locked - ignore key presses")
@@ -328,11 +329,11 @@ class RunExperiment:
 
         font = "Courier"
         font_size = 30
-        self.top_left_act = partial(self.choose_string, self.curr_image_name, 'left', params.res_path)
+        self.top_left_act = partial(self.choose_string, 'left', params.res_path)
         self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=self.top_left_act, font=(font, font_size))
         self.top_left_bttn.pack()
 
-        self.top_right_act = partial(self.choose_string, self.curr_image_name, 'right', params.res_path)
+        self.top_right_act = partial(self.choose_string, 'right', params.res_path)
         self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=self.top_right_act, font=(font, font_size))
         self.top_right_bttn.pack()
         self.window.tkraise()
@@ -341,61 +342,52 @@ class RunExperiment:
         self.repeat_key_counter = 0
         self.last_key = None
         self.write_repeat = False
-        self.window.after(50, self.unlock_key)
+        self.window.after(1, self.unlock_key)
         self.start_time = time.time()
         self.window.mainloop()
 
-    def choose_string(self, img_name, pressed, res_path, event=None):
+    def choose_string(self, pressed, res_path, event=None):
         self.end_time = time.time()
         self.lock_key()
         if self.repeat_key_counter >= max_repeat:
             PauseExperiment()
             self.repeat_key_counter = 0
             self.write_repeat = True
+        self.key_pressed = pressed
+        beep(pressed)
+        time.sleep(1)
+        if self.last_key == pressed:
+            self.repeat_key_counter += 1
+        else:
+            self.repeat_key_counter = 1
+            self.last_key = pressed
         if pressed == 'left':
-            self.key_pressed = 'left'
-            left_beep()
-            time.sleep(1)
-            os.system('say next image')
-            if self.last_key == 'left':
-                self.repeat_key_counter += 1
-            else:
-                self.repeat_key_counter = 1
-                self.last_key = 'left'
             choice = self.top_left_bttn['text']
             alternative = self.top_right_bttn['text']
         else:
-            self.key_pressed = 'right'
-            right_beep()
-            time.sleep(1)
-            os.system('say next image')
-            if self.last_key == 'right':
-                self.repeat_key_counter += 1
-            else:
-                self.repeat_key_counter = 1
-                self.last_key = 'right'
             choice = self.top_right_bttn['text']
             alternative = self.top_left_bttn['text']
+        say('next image')
         self.write_entry(res_path, self.curr_image_name, choice, alternative)
         self.write_repeat = False
         if len(self.label_pairs) == 0:
-            os.system('say " ' + "This experiment is now over. Please call over the proctor to end the session.\"")
+            say('This experiment is now over. Please call over the proctor to end the session.')
             self.window.destroy()
         else:
             self.trial_number += 1
-            self.window.title("Trial " + str(self.trial_number))
             self.repeat_counter = 0
             curr_label_pair = self.label_pairs.pop();
             self.curr_image_name = curr_label_pair[0]
             self.left_label = curr_label_pair[1]
             self.right_label = curr_label_pair[2]
             self.run_type = curr_label_pair[3]
+            self.window.title("Trial " + str(self.trial_number))
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
             self.top_left_bttn.configure(text=self.left_label)
             self.top_right_bttn.configure(text=self.right_label)
             self.window.update()
             self.read_label()
-            self.window.after(50, self.unlock_key)
+            self.window.after(1, self.unlock_key)
             self.start_time = time.time()
 
     def write_entry(self, res_path, img_name, choice, alternative):
@@ -444,12 +436,13 @@ class RunExperiment:
         self.trial_number = 1
         for image in self.image_files:
             full_path = params.img_path + '/' + image
-            self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
+            # self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
+            self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path))
             self.get_labels(image)
         self.add_control_cases()
         self.run_trial(params)
 
 
 params = SetParameters()
-
+ReadInstructions()
 RunExperiment(params)
