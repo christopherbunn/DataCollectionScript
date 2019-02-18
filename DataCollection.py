@@ -14,7 +14,8 @@ left_key = "f"
 right_key = "j"
 repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
-max_repeat = 10
+pause_experiment_key = "<Return>"
+max_repeat = 2
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
 participant_name = ""
@@ -200,20 +201,32 @@ class ReadInstructions:
 
 class PauseExperiment:
     @staticmethod
-    def read_pause():
+    def read_repeats_pause():
         say('This experiment has been paused. Please contact the proctor for assistance.')
 
+    @staticmethod
+    def read_break_pause():
+        say('This experiment has been paused for a break. Notify the proctor to resume the experiment')
+
     def exit_window(self, event):
+        say('This trial will now be resumed')
         self.window.destroy()
 
-    def __init__(self):
+    def __init__(self, type):
         self.window = tkinter.Tk()
         self.window.title("Pause Experiment")
-        label = ttk.Label(self.window, text="PAUSING EXPERIMENT")
-        label.pack()
-        self.window.tkraise()
-        self.window.update()
-        self.read_pause()
+        if type == 'repeats':
+            label = ttk.Label(self.window, text="PAUSING EXPERIMENT -- TOO MANY REPEATS")
+            label.pack()
+            self.window.tkraise()
+            self.window.update()
+            self.read_repeats_pause()
+        elif type == 'break':
+            label = ttk.Label(self.window, text="PAUSING EXPERIMENT -- REGULAR BREAK")
+            label.pack()
+            self.window.tkraise()
+            self.window.update()
+            self.read_break_pause()
         self.window.bind(continue_key, self.exit_window)
         self.window.wait_window()
 
@@ -224,15 +237,27 @@ class RunExperiment:
         print("Keys are locked - ignore key presses")
         return "break"
 
+    def take_break(self, event):
+        start = time.time()
+        PauseExperiment('break')
+        end = time.time()
+        duration = round(end - start, 3)
+        with open(self.res_path, 'a') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',',
+                                    quotechar='\"', quoting=csv.QUOTE_MINIMAL)
+            filewriter.writerow(["Took break. Length - " + str(duration)])
+
     def lock_key(self, event=None):
         self.window.bind(left_key, self.ignore)
         self.window.bind(right_key, self.ignore)
         self.window.bind(repeat_key, self.ignore)
+        self.window.bind(pause_experiment_key, self.ignore)
 
     def unlock_key(self, event=None):
         self.window.bind(left_key, self.top_left_act)
         self.window.bind(right_key, self.top_right_act)
         self.window.bind(repeat_key, self.repeat_label)
+        self.window.bind(pause_experiment_key, self.take_break)
 
     def get_labels(self, image):
         all_labels = self.descriptions[image]
@@ -360,7 +385,7 @@ class RunExperiment:
         self.end_time = time.time()
         self.lock_key()
         if self.repeat_key_counter >= max_repeat:
-            PauseExperiment()
+            PauseExperiment('repeats')
             self.repeat_key_counter = 0
             self.write_repeat = True
         self.key_pressed = pressed
@@ -441,6 +466,7 @@ class RunExperiment:
         self.lock_key()
         self.window.geometry("%dx%d+0+0" % (self.window.winfo_screenwidth(), self.window.winfo_screenheight()))
         self.read_desc(in_params.desc_path)
+        self.res_path = in_params.res_path
         self.my_images = dict()
         self.label_pairs = list()
         self.trial_number = 1
