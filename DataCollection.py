@@ -9,7 +9,7 @@ from os import path
 import os
 import datetime
 
-## Experiement Global Variables - Should be consistent between runs
+# Experiment Global Variables - Should be consistent between runs
 left_key = "f"
 right_key = "j"
 repeat_key = "<Key-space>"
@@ -22,12 +22,12 @@ max_num_of_random_labels = 4
 max_num_of_pairs = 6
 
 
-def beep(type=None):
-    if type == "left":
+def beep(beep_type=None):
+    if beep_type == "left":
         duration = 0.5  # second
         freq = 640  # Hz
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
-    elif type == "right":
+    elif beep_type == "right":
         duration = 0.5  # second
         freq = 540  # Hz
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
@@ -47,7 +47,7 @@ class Entry:
     alternate = ""
     choice_pos = ""
     duration = 0.0
-    run_type = "" #trial, control1, control2
+    run_type = ""  # trial, control1, control2
     num_repeats = ""
 
 
@@ -66,26 +66,26 @@ class LabelPair:
 
 class SetParameters:
     def get_params(self):
-        def save_parameters(*args):
+        def save_parameters():
+            global participant_name
             self.img_path = img_path_box.get()
             self.desc_path = desc_path_box.get()
-            self.res_path = res_path_box.get()
-            global participant_name
-            participant_name = self.res_path
+            self.nonsense_path = nonsense_path_box.get()
+            participant_name = res_path_box.get()
             now = datetime.datetime.now()
             self.res_path = self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
-            self.nonsense_path = nonsense_path_box.get()
             window.destroy()
 
         window = tkinter.Tk()
         window.title("Set Experiment Parameters")
         frame = ttk.Frame(window)
         frame.grid(column="0", row="0", sticky=('N', 'W', 'E', 'S'))
-        frame.columnconfigure(0,weight=1)
-        frame.rowconfigure(0,weight=1)
+        frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(0, weight=1)
 
-        field_labels = ["Image Location", "Description Location", "Participant Initials", "Nonsense File Path", "Number of Images", "Break Between Images (seconds)"]
+        field_labels = ["Image Location", "Description Location", "Participant Initials", "Nonsense File Path",
+                        "Number of Images", "Break Between Images (seconds)"]
 
         img_path_box = ttk.StringVar()
         desc_path_box = ttk.StringVar()
@@ -94,18 +94,18 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[0]).grid(row=0, column=0, sticky='E')
         img_entry = tkinter.Entry(frame, textvariable=img_path_box)
-        img_entry.insert(0,'assets/BenchmarkIMAGES')
-        img_entry.grid(row=0, column=1,sticky='W')
+        img_entry.insert(0, 'assets/BenchmarkIMAGES')
+        img_entry.grid(row=0, column=1, sticky='W')
 
         tkinter.Label(frame, text=field_labels[1]).grid(row=1, column=0, sticky='E')
         desc_entry = tkinter.Entry(frame, textvariable=desc_path_box)
         desc_entry.insert(0, 'assets/descriptions.csv')
-        desc_entry.grid(row=1, column=1,sticky='W')
+        desc_entry.grid(row=1, column=1, sticky='W')
 
         tkinter.Label(frame, text=field_labels[2]).grid(row=2, column=0, sticky='E')
         res_entry = tkinter.Entry(frame, textvariable=res_path_box)
         res_entry.insert(0, 'noname')
-        res_entry.grid(row=2, column=1,sticky='W')
+        res_entry.grid(row=2, column=1, sticky='W')
 
         tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
         nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
@@ -125,7 +125,8 @@ class SetParameters:
 
 
 class ReadInstructions:
-    def ignore(self, event=None):
+    @staticmethod
+    def ignore(event):
         print("Keys are locked - ignore key presses")
         return "break"
 
@@ -152,9 +153,9 @@ class ReadInstructions:
         time.sleep(1)
         say('Before we start, let\'s test the keys. Press the left key now')
         self.which_key = 'left'
-        self.window.after(1,self.bind_keys)
+        self.window.after(1, self.bind_keys)
 
-    def test_left_key(self, event=None):
+    def test_left_key(self, event):
         self.window.bind(left_key, self.ignore)
         say('You have just pressed the left key. When you select the left key, this tone will sound:')
         time.sleep(0.5)
@@ -164,7 +165,7 @@ class ReadInstructions:
         self.which_key = 'right'
         self.window.after(1, self.bind_keys)
 
-    def test_right_key(self, event=None):
+    def test_right_key(self, event):
         self.window.bind(right_key, self.ignore)
         say('You have just pressed the right key. When you select the right key, this tone will sound:')
         time.sleep(0.5)
@@ -174,7 +175,7 @@ class ReadInstructions:
         self.which_key = 'repeat'
         self.window.after(1, self.bind_keys)
 
-    def test_repeat_key(self, event=None):
+    def test_repeat_key(self, event):
         self.window.bind("<space>", self.ignore)
         say('You have just pressed the repeat key. When this key is pressed, the description will repeat.')
         time.sleep(0.5)
@@ -198,7 +199,8 @@ class ReadInstructions:
 
 
 class PauseExperiment:
-    def read_pause(self):
+    @staticmethod
+    def read_pause():
         say('This experiment has been paused. Please contact the proctor for assistance.')
 
     def exit_window(self, event):
@@ -217,18 +219,38 @@ class PauseExperiment:
 
 
 class RunExperiment:
+    @staticmethod
+    def ignore(event):
+        print("Keys are locked - ignore key presses")
+        return "break"
+
+    def lock_key(self, event=None):
+        self.window.bind(left_key, self.ignore)
+        self.window.bind(right_key, self.ignore)
+        self.window.bind(repeat_key, self.ignore)
+
+    def unlock_key(self, event=None):
+        self.window.bind(left_key, self.top_left_act)
+        self.window.bind(right_key, self.top_right_act)
+        self.window.bind(repeat_key, self.repeat_label)
+
     def get_labels(self, image):
         all_labels = self.descriptions[image]
         chosen_labels = []
+        # From all of the available descriptions, choose a subset of max_num_of_random_labels
         while len(chosen_labels) < max_num_of_random_labels:
-            idx = random.randint(0,len(all_labels) - 1)
+            idx = random.randint(0, len(all_labels) - 1)
             if all_labels[idx] not in chosen_labels:
                 chosen_labels.append(all_labels[idx])
         curr_num_of_pairs = 0
+        # From the subset of pairs, create max_num_of_pairs amount of pairs
         for label_l in chosen_labels:
             for label_r in chosen_labels:
                 if curr_num_of_pairs < max_num_of_pairs:
-                    if label_l != label_r and (image, label_r, label_l) not in self.label_pairs:
+                    # Add to possible pairs if the chosen descriptions are not the same and
+                    # both the same pair and the opposite does not exist
+                    if label_l != label_r and (image, label_r, label_l, "Trial") not in self.label_pairs \
+                            and (image, label_l, label_r, "Trial") not in self.label_pairs:
                         self.label_pairs.append((image, label_l, label_r, "Trial"))
                         curr_num_of_pairs += 1
 
@@ -252,7 +274,7 @@ class RunExperiment:
         num_rev_pairs = len(self.label_pairs) * reverse_percentage
         while len(rev_pairs) < num_rev_pairs:
             old_pair = random.choice(self.label_pairs)
-            new_pair = (old_pair[0],old_pair[2], old_pair[1], "Reverse Control")
+            new_pair = (old_pair[0], old_pair[2], old_pair[1], "Reverse Control")
             rev_pairs.append(new_pair)
         print("Reverse Controls", len(rev_pairs))
         # Nonsense pair - 5% - Control 2
@@ -263,10 +285,10 @@ class RunExperiment:
         new_labels_pos = 0
         while len(nonsense_pairs) < num_nonsense_pairs:
             old_pair = random.choice(self.label_pairs)
-            if left_nonsense_pair > 0: # Left
+            if left_nonsense_pair > 0:  # Left
                 new_pair = (old_pair[0], new_labels[new_labels_pos], old_pair[2], "Nonsense Control - Left")
                 left_nonsense_pair -= 1
-            else: #Right
+            else:
                 new_pair = (old_pair[0], old_pair[1], new_labels[new_labels_pos], "Nonsense Control - Right")
                 right_nonsense_pair -= 1
             nonsense_pairs.append(new_pair)
@@ -290,25 +312,11 @@ class RunExperiment:
         say('right: ' + self.right_label.replace('\'', '\\\''))
         self.window.after(1, self.unlock_key)
 
-    def ignore(self, event):
-        print("Keys are locked - ignore key presses")
-        return "break"
-
-    def lock_key(self, event=None):
-        self.window.bind(left_key, self.ignore)
-        self.window.bind(right_key, self.ignore)
-        self.window.bind(repeat_key, self.ignore)
-
-    def unlock_key(self, event=None):
-        self.window.bind(left_key, self.top_left_act)
-        self.window.bind(right_key, self.top_right_act)
-        self.window.bind(repeat_key, self.repeat_label)
-
     def repeat_label(self, event=None):
-        self.repeat_counter += 1
+        self.repeat_label_counter += 1
         self.read_label()
 
-    def run_trial(self, params):
+    def run_trial(self, res_path):
         self.window.title("Trial " + str(self.trial_number))
         img_frame = ttk.Frame(self.window)
         img_frame.pack()
@@ -321,20 +329,22 @@ class RunExperiment:
         self.left_label = curr_label_pair[1]
         self.right_label = curr_label_pair[2]
         self.run_type = curr_label_pair[3]
-
-        self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(), height=self.my_images[self.curr_image_name].height())
+        self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(),
+                                     height=self.my_images[self.curr_image_name].height())
         self.img_canvas.pack()
-        self.repeat_counter = 0
+        self.repeat_label_counter = 0
         self.img_on_canvas = self.img_canvas.create_image(0, 0, anchor='nw', image=self.my_images[self.curr_image_name])
 
         font = "Courier"
         font_size = 30
-        self.top_left_act = partial(self.choose_string, 'left', params.res_path)
-        self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=self.top_left_act, font=(font, font_size))
+        self.top_left_act = partial(self.choose_string, 'left', res_path)
+        self.top_left_bttn = tkinter.Button(button_frame, text=self.left_label, command=self.top_left_act,
+                                            font=(font, font_size))
         self.top_left_bttn.pack()
 
-        self.top_right_act = partial(self.choose_string, 'right', params.res_path)
-        self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=self.top_right_act, font=(font, font_size))
+        self.top_right_act = partial(self.choose_string, 'right', res_path)
+        self.top_right_bttn = tkinter.Button(button_frame, text=self.right_label, command=self.top_right_act,
+                                             font=(font, font_size))
         self.top_right_bttn.pack()
         self.window.tkraise()
         self.window.update()
@@ -375,8 +385,8 @@ class RunExperiment:
             self.window.destroy()
         else:
             self.trial_number += 1
-            self.repeat_counter = 0
-            curr_label_pair = self.label_pairs.pop();
+            self.repeat_label_counter = 0
+            curr_label_pair = self.label_pairs.pop()
             self.curr_image_name = curr_label_pair[0]
             self.left_label = curr_label_pair[1]
             self.right_label = curr_label_pair[2]
@@ -395,20 +405,23 @@ class RunExperiment:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Participant Initials', 'Image name', 'Choice', 'Alternative', 'Duration', 'Number of Command Repeats', 'Run Type', 'Key Pressed', 'Passed Repeat Key Threshold'])
+                filewriter.writerow(['Participant Initials', 'Image name', 'Choice', 'Alternative', 'Duration',
+                                     'Number of Command Repeats', 'Run Type', 'Key Pressed',
+                                     'Passed Repeat Key Threshold'])
         other_choices = []
-        for vals in range(0,4):
+        for vals in range(0, 4):
             if vals != choice:
                 other_choices.append(vals)
         with open(res_path, 'a') as csvfile:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([participant_name, img_name, choice, alternative, duration, self.repeat_counter, self.run_type, self.key_pressed, self.write_repeat])
+            filewriter.writerow([participant_name, img_name, choice, alternative, duration, self.repeat_label_counter,
+                                 self.run_type, self.key_pressed, self.write_repeat])
 
-    def read_desc(self, params):
-        with open(params.desc_path, 'r') as f:
-            reader = csv.reader(f) # CSV File
+    def read_desc(self, desc_path):
+        with open(desc_path, 'r') as f:
+            reader = csv.reader(f)  # CSV File
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -421,28 +434,44 @@ class RunExperiment:
                     if j != 0 and value != '':
                         self.descriptions[file_name].append(value)
 
-    def __init__(self, params):
+    def __init__(self, in_params):
         self.descriptions = {}
         self.image_files = list()
         self.window = tkinter.Tk()
         self.lock_key()
         w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
         self.window.geometry("%dx%d+0+0" % (w, h))
-        self.read_desc(params)
+        self.read_desc(in_params.desc_path)
         self.my_images = dict()
-        self.my_image_names = []
         self.label_pairs = list()
-        self.nonsense_path = params.nonsense_path
+        self.nonsense_path = in_params.nonsense_path  # TODO: Clean up nonsense path passing
         self.trial_number = 1
+        self.curr_image_name = ''
+        self.left_label = ''
+        self.right_label = ''
+        self.run_type = ''
+        self.key_pressed = ''
+        self.last_key = ''
+        self.start_time = 0
+        self.end_time = 0
+        self.repeat_key_counter = 0
+        self.repeat_label_counter = 0
+        self.top_left_act = None
+        self.top_left_bttn = None
+        self.write_repeat = None
+        self.top_right_act = None
+        self.top_right_bttn = None
+        self.img_canvas = None
+        self.img_on_canvas = None
         for image in self.image_files:
-            full_path = params.img_path + '/' + image
+            full_path = in_params.img_path + '/' + image
             # self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path))
             self.get_labels(image)
         self.add_control_cases()
-        self.run_trial(params)
+        self.run_trial(in_params.res_path)
 
 
 params = SetParameters()
-ReadInstructions()
+# ReadInstructions()
 RunExperiment(params)
