@@ -254,9 +254,9 @@ class RunExperiment:
                         self.label_pairs.append((image, label_l, label_r, "Trial"))
                         curr_num_of_pairs += 1
 
-    def get_nonsense_list(self, num_of_nonsense):
+    def get_nonsense_list(self, num_of_nonsense, nonsense_path):
         nonsense = []
-        with open(self.nonsense_path, 'r') as f:
+        with open(nonsense_path, 'r') as f:
             reader = csv.reader(f)
             temp = list(reader)
         for i, sentence in enumerate(temp):
@@ -266,7 +266,7 @@ class RunExperiment:
             final_list.append(random.choice(nonsense))
         return final_list
 
-    def add_control_cases(self):
+    def add_control_cases(self, nonsense_path):
         rev_pairs = []
         nonsense_pairs = []
         print("Regular", len(self.label_pairs))
@@ -279,7 +279,7 @@ class RunExperiment:
         print("Reverse Controls", len(rev_pairs))
         # Nonsense pair - 5% - Control 2
         num_nonsense_pairs = len(self.label_pairs) * nonsense_percentage
-        new_labels = self.get_nonsense_list(num_nonsense_pairs)
+        new_labels = self.get_nonsense_list(num_nonsense_pairs, nonsense_path)
         left_nonsense_pair = num_nonsense_pairs / 2
         right_nonsense_pair = num_nonsense_pairs - left_nonsense_pair
         new_labels_pos = 0
@@ -439,12 +439,10 @@ class RunExperiment:
         self.image_files = list()
         self.window = tkinter.Tk()
         self.lock_key()
-        w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
-        self.window.geometry("%dx%d+0+0" % (w, h))
+        self.window.geometry("%dx%d+0+0" % (self.window.winfo_screenwidth(), self.window.winfo_screenheight()))
         self.read_desc(in_params.desc_path)
         self.my_images = dict()
         self.label_pairs = list()
-        self.nonsense_path = in_params.nonsense_path  # TODO: Clean up nonsense path passing
         self.trial_number = 1
         self.curr_image_name = ''
         self.left_label = ''
@@ -468,7 +466,7 @@ class RunExperiment:
             # self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path))
             self.get_labels(image)
-        self.add_control_cases()
+        self.add_control_cases(in_params.nonsense_path)
         self.run_trial(in_params.res_path)
 
 
