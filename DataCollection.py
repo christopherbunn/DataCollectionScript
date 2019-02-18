@@ -15,6 +15,7 @@ right_key = "j"
 repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
 pause_experiment_key = "<Return>"
+result_directory = "./"
 max_repeat = 2
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
@@ -74,7 +75,7 @@ class SetParameters:
             self.nonsense_path = nonsense_path_box.get()
             participant_name = res_path_box.get()
             now = datetime.datetime.now()
-            self.res_path = self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
+            self.res_path = result_directory + self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             window.destroy()
 
@@ -119,7 +120,7 @@ class SetParameters:
     def __init__(self):
         self.img_path = 'assets/BenchmarkIMAGES'
         self.desc_path = 'assets/descriptions.csv'
-        self.res_path = 'noname.csv'
+        self.res_path = 'noname'
         self.num_img = 0
         self.break_size = 0
         self.get_params()
@@ -450,7 +451,8 @@ class RunExperiment:
 
     def read_desc(self, desc_path):
         with open(desc_path, 'r') as f:
-            reader = csv.reader(f)  # CSV File
+            reader = csv.reader(f, delimiter='\t') # TSV File
+            # reader = csv.reader(f)  # CSV File
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
         for i, img_entry in enumerate(temp):
@@ -501,5 +503,5 @@ class RunExperiment:
 
 
 params = SetParameters()
-# ReadInstructions()
+ReadInstructions()
 RunExperiment(params)
