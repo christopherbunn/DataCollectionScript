@@ -430,8 +430,8 @@ class RunExperiment:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Participant Initials', 'Image name', 'Choice', 'Alternative', 'Duration',
-                                     'Number of Command Repeats', 'Run Type', 'Key Pressed',
+                filewriter.writerow(['Participant Initials', 'Image name', 'Left Option', 'Right Option', 'Duration',
+                                     'Number of Command Repeats', 'Run Type', 'Key Chosen',
                                      'Passed Repeat Key Threshold'])
         other_choices = []
         for vals in range(0, 4):
@@ -441,8 +441,12 @@ class RunExperiment:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow([participant_name, img_name, choice, alternative, duration, self.repeat_label_counter,
-                                 self.run_type, self.key_pressed, self.write_repeat])
+            if self.key_pressed == 'left':
+                filewriter.writerow([participant_name, img_name, choice, alternative, duration,
+                                     self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
+            elif self.key_pressed == 'right':
+                filewriter.writerow([participant_name, img_name, alternative, choice, duration,
+                                     self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
 
     def read_desc(self, desc_path):
         with open(desc_path, 'r') as f:
