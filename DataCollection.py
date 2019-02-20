@@ -15,7 +15,7 @@ right_key = "2"
 repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
 pause_experiment_key = "<Return>"
-result_directory = "./"
+result_directory = "../Results"
 max_repeat = 7
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
@@ -96,12 +96,12 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[0]).grid(row=0, column=0, sticky='E')
         img_entry = tkinter.Entry(frame, textvariable=img_path_box)
-        img_entry.insert(0, 'assets/BenchmarkIMAGES')
+        img_entry.insert(0, '../New_Assets/Images/BenchmarkIMAGES')
         img_entry.grid(row=0, column=1, sticky='W')
 
         tkinter.Label(frame, text=field_labels[1]).grid(row=1, column=0, sticky='E')
         desc_entry = tkinter.Entry(frame, textvariable=desc_path_box)
-        desc_entry.insert(0, 'assets/descriptions.csv')
+        desc_entry.insert(0, '../New_Assets/Descriptions/training.tsv')
         desc_entry.grid(row=1, column=1, sticky='W')
 
         tkinter.Label(frame, text=field_labels[2]).grid(row=2, column=0, sticky='E')
@@ -111,7 +111,7 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
         nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
-        nonsense_entry.insert(0, 'assets/nonsense.csv')
+        nonsense_entry.insert(0, '../New_Assets/facts.tsv')
         nonsense_entry.grid(row=3, column=1, sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
