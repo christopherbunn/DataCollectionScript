@@ -27,15 +27,15 @@ break_trial=200
 
 def beep(beep_type=None):
     if beep_type == "left":
-        duration = 0.5  # second
+        duration = 0.2  # second
         freq = 640  # Hz
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
     elif beep_type == "right":
-        duration = 0.5  # second
+        duration = 0.2  # second
         freq = 540  # Hz
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
     else:
-        duration = 0.35  # second
+        duration = 0.2  # second
         freq = 240  # Hz
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
 
