@@ -22,6 +22,7 @@ nonsense_percentage = 0.05
 participant_name = ""
 max_num_of_random_labels = 4
 max_num_of_pairs = 6
+break_trial=200
 
 
 def beep(beep_type=None):
@@ -381,6 +382,8 @@ class RunExperiment:
     def choose_string(self, pressed, res_path, event=None):
         self.end_time = time.time()
         self.lock_key()
+        if self.trial_number == break_trial:
+            PauseExperiment('break')
         if self.repeat_key_counter >= max_repeat:
             PauseExperiment('repeats')
             self.repeat_key_counter = 0
