@@ -10,13 +10,13 @@ import os
 import datetime
 
 # Experiment Global Variables - Should be consistent between runs
-left_key = "f"
-right_key = "j"
+left_key = "1"
+right_key = "2"
 repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
 pause_experiment_key = "<Return>"
 result_directory = "./"
-max_repeat = 2
+max_repeat = 7
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
 participant_name = ""
@@ -330,11 +330,11 @@ class RunExperiment:
     def read_label(self, event=None):
         self.lock_key()
         beep()
-        time.sleep(0.6)
+        time.sleep(0.5)
         say('left: ' + self.left_label.replace('\'', '\\\''))
         time.sleep(1)
         beep()
-        time.sleep(0.6)
+        time.sleep(0.5)
         say('right: ' + self.right_label.replace('\'', '\\\''))
         self.window.after(1, self.unlock_key)
 
