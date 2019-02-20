@@ -144,13 +144,9 @@ class ReadInstructions:
             self.window.bind("<space>", self.exit_window)
 
     def read_instructions(self):
-        say('A series of photos will be shown. Each photo will have two captions associated with the photo. '
-            'Before each caption is read, this tone will sound. ')
-        time.sleep(0.5)
-        beep()
-        time.sleep(0.5)
+        say('A series of photos will be shown. Each photo will have two captions associated with the photo. ')
         say('Each caption will be denoted with left or right at the beginning. '
-            'If the left caption fits the best, press the left key. If the right caption fits the best,'
+            'If you prefer the left caption, press the left key. If you prefer the right caption,'
             'press the right key. To repeat both captions, press the space bar.')
         time.sleep(1)
         say('Before we start, let\'s test the keys. Press the left key now')
@@ -329,11 +325,11 @@ class RunExperiment:
 
     def read_label(self, event=None):
         self.lock_key()
-        beep()
+        #beep()
         time.sleep(0.5)
         say('left: ' + self.left_label.replace('\'', '\\\''))
         time.sleep(1)
-        beep()
+        #beep()
         time.sleep(0.5)
         say('right: ' + self.right_label.replace('\'', '\\\''))
         self.window.after(1, self.unlock_key)
