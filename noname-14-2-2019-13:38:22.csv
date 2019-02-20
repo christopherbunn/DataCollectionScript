@@ -1,0 +1,3 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,South Asian children in school uniforms,The president of america is donald trump,1.784,0,Nonsense Control - Left,right,False
+noname,i295.jpg,Asian children wearing white shirts,South Asian children in school uniforms,0.001,0,Reverse Control,right,False

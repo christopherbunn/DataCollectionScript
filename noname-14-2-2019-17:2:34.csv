@@ -1,0 +1,4 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,Asian boy jumping in air,tan children with black hair,0.001,0,Trial,left,False
+noname,i295.jpg, tiny building behind school children,old,4.91,0,Trial,right,False
+noname,i295.jpg,tan children with black hair,cows produce milk,0.001,0,Nonsense Control - Left,right,False

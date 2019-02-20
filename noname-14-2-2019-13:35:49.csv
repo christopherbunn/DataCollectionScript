@@ -1,0 +1,5 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,Asian children wearing red shorts,Asian children wearing white shirts,0.002,0,Trial,right,False
+noname,i295.jpg,Asian children wearing white shirts,happy children waving and smiling,0.002,0,Reverse Control,right,False
+noname,i295.jpg,Asian children wearing white shirts,happy children waving and smiling,2.69,0,Trial,left,False
+noname,i295.jpg,happy children waving and smiling,side mirror of car in corner,0.002,0,Trial,left,False

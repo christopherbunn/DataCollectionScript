@@ -1,0 +1,9 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+jid,i295.jpg,Asian children wearing white shirts,children in white and red uniforms,3.297,0,Trial,left,False
+jid,i295.jpg, tiny building behind school children,children in white and red uniforms,1.725,0,Trial,left,False
+jid,i295.jpg, tiny building behind school children,paper is for writing,1.017,0,Nonsense Control - Left,right,False
+jid,i295.jpg,Asian children wearing white shirts, tiny building behind school children,1.431,0,Trial,right,False
+jid,i295.jpg,Asian children wearing white shirts,happy children waving and smiling,1.335,0,Trial,left,False
+jid,i295.jpg,Asian children wearing white shirts, tiny building behind school children,0.318,0,Trial,left,False
+jid,i295.jpg,happy children waving and smiling, tiny building behind school children,0.393,0,Trial,right,False
+jid,i295.jpg,Asian children wearing white shirts, tiny building behind school children,0.011,0,Reverse Control,left,False

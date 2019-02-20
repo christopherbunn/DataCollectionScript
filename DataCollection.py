@@ -10,11 +10,12 @@ from os.path import isfile, join
 import os
 import datetime
 
-left_key = "f"
-right_key = "j"
+left_key = "1"
+right_key = "2"
 repeat_key = "<space>"
 continue_key = "<space>"
-max_repeat = 10
+pause_key = "3"
+max_repeat = 7
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
 participant_name = ""
@@ -140,13 +141,10 @@ class SetParameters:
 class ReadInstructions:
     def read_instructions(self):
         os.system('say "' + 'A series of photos will be shown. Each photo will have two captions associated '
-                            'with the photo. Before each caption is read, this tone will sound. "')
-        time.sleep(0.5)
-        beep()
-        time.sleep(0.5)
+                            'with the photo. "')
         self.window.bind(left_key, self.test_left_key)
         os.system('say "' + 'Each caption will be denoted with left or right at the beginning. '
-                            'If the left caption fits the best, press the left key. If the right caption fits the best,'
+                            'If you prefer the left caption, press the left key. If you prefer the right caption,'
                             'press the right key. To repeat both captions, press the space bar."')
         time.sleep(1)
         os.system('say "' + 'Before we start, let\'s test the keys.'
@@ -185,7 +183,7 @@ class ReadInstructions:
         label.pack()
         self.window.tkraise()
         self.window.update()
-        #self.read_instructions()
+        self.read_instructions()
         self.window.bind("<space>", self.exit_window)
 
         self.window.mainloop()
@@ -285,11 +283,11 @@ class RunExperiment:
 
     def read_label(self, event=None):
         #beep()
-        time.sleep(0.6)
+        time.sleep(0.5)
         os.system('say ' + 'left: ' + self.left_label.replace('\'', '\\\''))
         time.sleep(1)
         #beep()
-        time.sleep(0.6)
+        time.sleep(0.5)
         os.system('say ' + 'right: ' + self.right_label.replace('\'', '\\\''))
 
     def ignore(self, event=None):
@@ -298,11 +296,13 @@ class RunExperiment:
         return "break"
 
     def lock_key(self, event=None):
+        self.window.bind(pause_key, self.ignore)
         self.window.bind(left_key, self.ignore)
         self.window.bind(right_key, self.ignore)
         self.window.bind(repeat_key, self.ignore)
 
     def unlock_key(self, event=None):
+        self.window.bind(pause_key, self.ignore)
         self.window.bind(left_key, self.top_left_act)
         self.window.bind(right_key, self.top_right_act)
         self.window.bind(repeat_key, self.repeat_label)
@@ -353,6 +353,9 @@ class RunExperiment:
         self.end_time = time.time()
         self.lock_key()
         # print(self.repeat_key_counter)
+        if pressed == pause_key:
+
+            PauseExperiment()
         if self.repeat_key_counter >= max_repeat:
             PauseExperiment()
             self.repeat_key_counter = 0
@@ -388,6 +391,10 @@ class RunExperiment:
             self.window.destroy()
         else:
             self.trial_number += 1
+            print(self.trial_number)
+            if int(self.trial_number) == 200:
+                os.system('say " ' + "This experiment is paused for a break.\"")
+                PauseExperiment()
             self.window.title("Trial " + str(self.trial_number))
             self.repeat_counter = 0
             curr_label_pair = self.label_pairs.pop();

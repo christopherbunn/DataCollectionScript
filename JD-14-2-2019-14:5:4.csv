@@ -1,0 +1,415 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i87.jpg,serious man with hands folded in prayer,traditionally clothed man wearing glasses,1.003,0,Trial,left,False
+noname,i92.jpg,man wearing black turtleneck sweater,man putting can on boy's head,1.357,0,Trial,left,False
+noname,i94.jpg,three children wearing red shirts,children crouched over two buckets,1.117,0,Trial,left,False
+noname,i82.jpg,woman in black dress holding glass,landscape painting with gold frame,0.322,0,Trial,right,False
+noname,i44.jpg,customer in black viewing candies,signs before trays of candy,0.779,0,Trial,left,False
+noname,i9.jpg,two black and blue motorcycles,wooden wall behind motorcycles,0.806,0,Trial,right,False
+noname,i42.jpg,man taking photos in corner,Chinese New Year dragon dance,0.651,0,Trial,right,False
+noname,i41.jpg,many white boats by dock,green hill with colorful houses,0.443,0,Trial,right,False
+noname,i27.jpg,worm's eye view inside building,black pillars on left wall,0.716,0,Trial,right,False
+noname,i76.jpg,seven children wearing colorful clothes,dark background behind children,0.196,0,Trial,right,False
+noname,i89.jpg,tiny red fish in coral reef,person scuba diving underwater,0.594,0,Trial,right,False
+noname,i87.jpg,man wearing white traditional hat,flower necklaces on man praying,0.826,0,Trial,right,False
+noname,i65.jpg,two women sitting with Chinese menu,white and orange signs on wall,0.342,0,Trial,left,True
+noname,i37.jpg,stone house behind blue tent,large rocks surrounding blue tent,0.497,0,Trial,left,False
+noname,i27.jpg,people walking down staircase,black pillars on left wall,0.122,0,Trial,right,False
+noname,i88.jpg,interior of white house,wooden chairs and dining tables,0.419,0,Trial,left,False
+noname,i63.jpg,sun rays peeking through shrubs,field of grass under sun,1.06,0,Reverse Control,right,False
+noname,i85.jpg,white van driving in background,white lanes on cement road,1.215,0,Trial,left,False
+noname,i87.jpg,traditionally clothed man wearing glasses,flower necklaces on man praying,1.177,0,Trial,right,False
+noname,i27.jpg,people walking down staircase,black pillars on left wall,0.02,0,Reverse Control,left,False
+noname,i37.jpg,stone house behind blue tent,colorful mats on donkeys' backs,0.556,0,Trial,left,False
+noname,i33.jpg,cereal and apple juice before boy,brown wooden cabinets behind boy,0.335,0,Trial,left,False
+noname,i80.jpg,crowd surrounding bonfire,huge bonfire at center,0.555,0,Trial,left,False
+noname,i88.jpg,large mirror hanging on white wall,wooden chairs and dining tables,0.941,0,Trial,right,False
+noname,i15.jpg,water behind the restaurant,cups and sauces on table,0.213,0,Trial,left,False
+noname,i10.jpg,five small children playing,large building behind the panda,0.326,0,Trial,left,False
+noname,i13.jpg,large windows letting in sunlight,doorway to the right,0.106,0,Trial,right,False
+noname,i7.jpg,runners running a marathon,the sun is far away,0.222,0,Nonsense Control - Right,left,False
+noname,i74.jpg,people sitting on bench under trees,building with white pillars on three floors,0.173,0,Trial,right,False
+noname,i85.jpg,heart shaped light on traffic post,large brown house in blurred background,0.835,0,Trial,right,False
+noname,i1.jpg,man and woman smiling,gray barn in background,0.001,0,Trial,left,False
+noname,i18.jpg,tractor next to soil,snow on top of soil,0.908,0,Trial,right,False
+noname,i26.jpg,bushes and signs on sidewalk,white building behind dark trees,0.133,0,Trial,left,False
+noname,i94.jpg,three children wearing red shirts,arms squeezing dye out of shirt,0.138,0,Reverse Control,right,False
+noname,i23.jpg,trees behind kitchen windows,TV turned on in background,0.664,0,Trial,right,False
+noname,i12.jpg,a house behind three people,salt is slaty,0.838,0,Nonsense Control - Right,left,False
+noname,i35.jpg,red lantern hanging in passageway,"green, traditional Japanese rooftop",0.269,0,Trial,right,False
+noname,i9.jpg,two black and blue motorcycles,motorcycle with speedometer,0.895,0,Trial,left,False
+noname,i28.jpg,funeral home at night,paper is for writing,0.537,0,Nonsense Control - Left,right,False
+noname,i28.jpg,black fence behind potted trees,lamp next to white door,0.767,0,Trial,left,False
+noname,i20.jpg,cars halfway submerged in mud,four cars with graffiti,0.306,0,Trial,right,False
+noname,i85.jpg,white van driving in background,large brown house in blurred background,0.926,0,Trial,right,False
+noname,i83.jpg,wooden Tiki statue on beach,rocky beach with blue water,0.343,0,Trial,right,False
+noname,i97.jpg,person wearing black winter coat,person looking at street art,0.453,0,Trial,right,False
+noname,i24.jpg,airplane figures hanging from ceiling,museum with automobile figures,0.397,0,Trial,right,False
+noname,i9.jpg,motorcycle with speedometer,wooden wall behind motorcycles,0.585,0,Trial,right,False
+noname,i22.jpg,cloud-filled sky behind castle,mowed grass behind wild grass,0.311,0,Trial,left,False
+noname,i87.jpg,flower necklaces on man praying,serious man with hands folded in prayer,0.247,0,Trial,right,False
+noname,i3.jpg,A rock band playing music,stage within a blue automobile,0.177,0,Reverse Control,right,False
+noname,i97.jpg,person looking at street art,gray wall with colorful designs,0.033,0,Trial,left,False
+noname,i19.jpg,pastries on wax paper,price signs behind pastries,0.363,0,Trial,left,False
+noname,i27.jpg,bright lights on second floor,black pillars on left wall,0.293,0,Trial,right,False
+noname,i88.jpg,large mirror hanging on white wall,interior of white house,0.092,0,Trial,right,False
+noname,i18.jpg,snow on top of soil,clouds covering the sun,1.049,0,Trial,left,False
+noname,i27.jpg,people walking down staircase,bright lights on second floor,0.001,0,Trial,right,False
+noname,i94.jpg,three children wearing blue jeans crouched,three children wearing red shirts,0.461,0,Trial,right,False
+noname,i23.jpg,ceiling fan above kitchen table,TV turned on in background,0.21,0,Trial,right,False
+noname,i28.jpg,lamp next to white door,"sign saying ""Barrett Funeral Home""",0.675,0,Trial,right,False
+noname,i63.jpg,sun rays peeking through shrubs,green moss on rock path,0.281,0,Trial,left,False
+noname,i30.jpg,sea with rocks behind photographer,stormy rocky beach,0.187,0,Trial,right,False
+noname,i37.jpg,five donkeys nearby blue tent,stone house behind blue tent,0.17,0,Trial,right,False
+noname,i82.jpg,two dressed up women smiling,woman in black dress holding glass,0.375,0,Trial,right,False
+noname,i14.jpg,leafless trees above sculpture,brown sculpture within a wall,0.296,0,Trial,right,False
+noname,i44.jpg,customer in black viewing candies,There are twelve months in a year,0.316,0,Nonsense Control - Right,left,False
+noname,i44.jpg,customer in black viewing candies,candies in display case,0.001,0,Reverse Control,right,False
+noname,i31.jpg,grocery market behind empty lot,snow-covered car parked by market,0.313,0,Trial,left,False
+noname,i41.jpg,blue harbor with docked boats,green hill with colorful houses,0.211,0,Trial,left,False
+noname,i24.jpg,museum with automobile figures,a museum of transportation,0.431,0,Trial,left,False
+noname,i93.jpg,clotheslines filled with colorful clothes,old pink building behind clotheslines,0.045,0,Trial,right,False
+noname,i62.jpg,two men sitting in background,dim lamp over dark restaurant,0.341,0,Trial,right,False
+noname,i43.jpg,crowd of people sitting on benches,crowd of people beneath umbrellas,0.098,0,Trial,right,False
+noname,i3.jpg,A rock band playing music,stage within a blue automobile,0.084,0,Trial,left,False
+noname,i30.jpg,person taking a photo,black hooded person with jeans,0.051,0,Trial,right,False
+noname,i60.jpg,female and male acrobrats in white suits,acrobat doing handstands on man's head,0.393,0,Trial,right,False
+noname,i3.jpg,A rock band playing music,rockstars with colorful tights,0.001,0,Reverse Control,right,False
+noname,i74.jpg,people sitting on bench under trees,building with white pillars on three floors,0.001,0,Trial,left,False
+noname,i36.jpg,silhouette of woman walking left,fancy dresses on display,0.19,0,Trial,right,False
+noname,i65.jpg,two black-haired women smiling ,two women sitting with Chinese menu,0.561,0,Trial,right,False
+noname,i24.jpg,museum with automobile figures,a museum of transportation,0.221,0,Trial,right,False
+noname,i22.jpg,castle in between two buildings,mowed grass behind wild grass,0.127,0,Trial,left,False
+noname,i62.jpg,Asian woman holding boy,cows produce milk,0.234,0,Nonsense Control - Left,right,False
+noname,i56.jpg,dark-haired toddler smiling ,white wall and gray sofa in the background,0.001,0,Trial,left,False
+noname,i93.jpg,two women with hands on hips,old pink building behind clotheslines,0.19,0,Trial,right,False
+noname,i44.jpg,customer in black viewing candies,chocolates and sweets on display,0.001,0,Trial,left,False
+noname,i56.jpg,white woman on wooden chair,dark-haired toddler smiling ,0.144,0,Trial,right,False
+noname,i81.jpg,strawberry slice on whip cream,dessert on white plate,0.272,0,Trial,right,False
+noname,i93.jpg,two women with hands on hips,clotheslines filled with colorful clothes,0.001,0,Trial,left,False
+noname,i89.jpg,tiny red fish in coral reef,coral reef behind scuba diver,0.203,0,Trial,right,False
+noname,i3.jpg,four musicians' knee-length hair,rockstars with colorful tights,0.238,0,Trial,right,False
+noname,i15.jpg,two women with sunglasses sitting,cups and sauces on table,0.484,0,Trial,right,False
+noname,i20.jpg,cars halfway submerged in mud,large land with red mud,0.31,0,Trial,left,False
+noname,i43.jpg,blue and white striped umbrellas,There are seven days in a week,0.569,0,Nonsense Control - Left,right,False
+noname,i65.jpg,two women sitting with Chinese menu,signs with Chinese characters,0.667,0,Trial,left,False
+noname,i81.jpg,strawberry slice on whip cream,slices of brown cake with dark raisins,0.001,0,Trial,right,False
+noname,i97.jpg,person looking at street art,brown bricked pillars behind wall art,0.227,0,Trial,left,False
+noname,i5.jpg,red and purple lights,dark jazz club,0.585,0,Trial,right,False
+noname,i7.jpg,people cheering towards the left,red New Balance banner,0.244,0,Trial,left,False
+noname,i92.jpg,boy with a can on his head,man wearing black turtleneck sweater,0.368,0,Trial,right,False
+noname,i17.jpg,people's legs with white pants,black brown and white dog,2.022,0,Trial,right,False
+noname,i8.jpg,a woman with brown hair,woman wearing black sunglasses,0.279,0,Trial,left,False
+noname,i41.jpg,village on hill behind harbor,green hill with colorful houses,0.151,0,Trial,right,False
+noname,i6.jpg,dark jazz club,two water bottles on floor,0.257,0,Trial,right,False
+noname,i20.jpg,cars halfway submerged in mud,four cars with graffiti,0.421,0,Trial,left,False
+noname,i81.jpg,slices of brown cake with dark raisins,dessert on white plate,0.825,0,Trial,left,False
+noname,i13.jpg,doorway to the right,blank white room with bed,0.292,0,Trial,left,False
+noname,i62.jpg,Asian woman holding boy,dim lamp over dark restaurant,0.416,0,Trial,right,False
+noname,i89.jpg,person scuba diving underwater,coral reef behind scuba diver,0.024,0,Trial,right,False
+noname,i12.jpg,woman and two children smiling,brown-haired woman wearing jeans,0.144,0,Trial,left,False
+noname,i78.jpg,butterfly sitting on man's finger,man wearing thin black sunglasses,0.098,0,Reverse Control,right,False
+noname,i33.jpg,cereal and apple juice before boy,decorated white refrigerator behind counter,0.323,0,Trial,left,False
+noname,i7.jpg,runners running a marathon,clock hanging above red banner,0.158,0,Trial,left,False
+noname,i6.jpg,man in black playing a trumpet,two water bottles on floor,0.361,0,Trial,right,False
+noname,i74.jpg,people sitting on bench under trees,Christmas trees with ornaments,0.091,0,Trial,left,False
+noname,i56.jpg,white woman holding toddler,dark-haired toddler smiling ,0.186,0,Trial,right,False
+noname,i21.jpg,two wooden trays with pastries,price signs behind pastries,0.124,0,Trial,left,False
+noname,i3.jpg,rockstars with colorful tights,stage within a blue automobile,0.037,0,Trial,left,False
+noname,i82.jpg,woman in black dress holding glass,brick wall in background,0.126,0,Trial,left,False
+noname,i79.jpg,shallow boats on shore,shore of island,0.538,0,Trial,left,False
+noname,i30.jpg,black hooded person with jeans,stormy rocky beach,0.167,0,Trial,left,False
+noname,i58.jpg,electric wire above the street,downhill street,0.413,0,Trial,left,False
+noname,i3.jpg,four musicians' knee-length hair,A rock band playing music,0.145,0,Trial,right,False
+noname,i80.jpg,people wearing thick coats,crowd surrounding bonfire,0.003,0,Trial,left,False
+noname,i36.jpg,fancy dresses on display,red and white dresses on mannequins,0.523,0,Trial,left,False
+noname,i36.jpg,red and white dresses on mannequins,salt is slaty,0.241,0,Nonsense Control - Left,right,False
+noname,i30.jpg,sea with rocks behind photographer,black hooded person with jeans,0.263,0,Trial,right,False
+noname,i88.jpg,interior of white house,wooden chairs and dining tables,0.734,0,Trial,right,False
+noname,i10.jpg,five small children playing,large building behind the panda,0.086,0,Reverse Control,right,False
+noname,i78.jpg,man wearing thin black sunglasses,reflection of people in man's sunglasses,0.389,0,Trial,right,False
+noname,i17.jpg,people's legs with white pants,black brown and white dog,0.31,0,Trial,left,False
+noname,i28.jpg,funeral home at night,"sign saying ""Barrett Funeral Home""",0.39,0,Trial,right,False
+noname,i7.jpg,runners running a marathon,red New Balance banner,0.349,0,Trial,left,False
+noname,i19.jpg,tarts and pastries on tray,price signs behind pastries,0.067,0,Trial,right,False
+noname,i43.jpg,crowd of people sitting on benches,blue and white striped umbrellas,0.001,0,Trial,right,False
+noname,i16.jpg,cat almost closing its eyes,close up image of cat,0.572,0,Trial,right,False
+noname,i47.jpg,alley between gray buildings,telephone wires above street,0.455,0,Trial,right,False
+noname,i28.jpg,black fence behind potted trees,"sign saying ""Barrett Funeral Home""",0.011,0,Trial,left,False
+noname,i36.jpg,women looking at displayed dresses,red and white dresses on mannequins,0.165,0,Trial,left,False
+noname,i36.jpg,women looking at displayed dresses,fancy dresses on display,0.001,0,Trial,right,False
+noname,i33.jpg,boy clutching and drinking juicebox,brown wooden cabinets behind boy,0.263,0,Trial,right,False
+noname,i6.jpg,dark jazz club,"pink, purple, and blue lights",0.574,0,Reverse Control,left,False
+noname,i94.jpg,children crouched over two buckets,arms squeezing dye out of shirt,0.414,0,Trial,right,False
+noname,i37.jpg,five donkeys nearby blue tent,large rocks surrounding blue tent,0.251,0,Trial,right,False
+noname,i94.jpg,three children wearing red shirts,arms squeezing dye out of shirt,1.213,0,Trial,right,False
+noname,i83.jpg,rocky beach with blue water,small white waves crashing into rocks,0.163,0,Trial,left,False
+noname,i41.jpg,village on hill behind harbor,blue harbor with docked boats,0.281,0,Trial,right,False
+noname,i72.jpg,airplane with three wheels,buildings in trees behind airplane,0.871,0,Trial,left,False
+noname,i82.jpg,woman in black dress holding glass,brick wall in background,0.233,0,Reverse Control,right,False
+noname,i83.jpg,person in water in background,small white waves crashing into rocks,0.122,0,Trial,right,False
+noname,i27.jpg,worm's eye view inside building,bright lights on second floor,0.009,0,Trial,right,False
+noname,i65.jpg,two black-haired women smiling ,two women sitting with Chinese menu,0.201,0,Trial,left,False
+noname,i5.jpg,three middle-aged men playing instruments,red and purple lights,0.169,0,Trial,left,False
+noname,i3.jpg,A rock band playing music,rockstars with colorful tights,0.009,0,Trial,right,False
+noname,i58.jpg,person standing in the middle of the street,electric wire above the street,0.03,0,Trial,right,False
+noname,i60.jpg,acrobat doing handstands on man's head,female and male acrobrats in white suits,0.118,0,Trial,right,False
+noname,i27.jpg,bright lights on second floor,black pillars on left wall,0.146,0,Reverse Control,left,False
+noname,i47.jpg,tall buildings behind gray homes,telephone wires above street,0.383,0,Trial,right,False
+noname,i36.jpg,women looking at displayed dresses,fancy dresses on display,0.105,0,Trial,left,False
+noname,i62.jpg,Asian woman holding boy,two men sitting in background,0.382,0,Trial,right,False
+noname,i22.jpg,castle in between two buildings,cloud-filled sky behind castle,0.1,0,Trial,right,False
+noname,i44.jpg,customer in black viewing candies,chocolates and sweets on display,0.001,0,Trial,right,False
+noname,i18.jpg,trees behind construction,clouds covering the sun,0.499,0,Trial,left,False
+noname,i42.jpg,performers carrying yellow-red dragon,woman with sunglasses on head in front,0.932,0,Trial,right,False
+noname,i79.jpg,people laying on beach,shore of island,0.33,0,Reverse Control,left,False
+noname,i15.jpg,cups and sauces on table,water behind the restaurant,0.823,0,Trial,left,False
+noname,i8.jpg,a woman with brown hair,blond hair in front of woman,0.382,0,Trial,left,False
+noname,i60.jpg,crowd watching Japanese street acrobats,female and male acrobrats in white suits,0.18,0,Trial,right,False
+noname,i44.jpg,chocolates and sweets on display,signs before trays of candy,0.423,0,Trial,left,False
+noname,i85.jpg,large brown house in blurred background,white lanes on cement road,0.729,0,Trial,left,False
+noname,i16.jpg,cat almost closing its eyes,close up of cat's whiskers,0.457,0,Trial,left,False
+noname,i63.jpg,yellow Labrador laying on grass,sun rays peeking through shrubs,0.179,0,Trial,right,False
+noname,i13.jpg,brown bed with wooden frame,doorway to the right,1.609,0,Trial,right,False
+noname,i16.jpg,close up image of cat,cat almost closing its eyes,0.68,0,Trial,right,False
+noname,i89.jpg,scuba diver wearing yellow flippers,person scuba diving underwater,0.392,0,Trial,right,False
+noname,i21.jpg,man pouring wine at bar,two wooden trays with pastries,0.261,0,Trial,right,False
+noname,i1.jpg,gray barn in background,green grass in front,0.713,0,Trial,left,False
+noname,i97.jpg,person wearing black winter coat,brown bricked pillars behind wall art,0.244,0,Trial,left,False
+noname,i16.jpg,cat almost closing its eyes,"brown, black, and white cat",1.185,0,Trial,left,False
+noname,i8.jpg,woman with blank facial expression,a woman with brown hair,0.21,0,Trial,right,False
+noname,i37.jpg,colorful mats on donkeys' backs,large rocks surrounding blue tent,0.148,0,Trial,right,False
+noname,i80.jpg,trees with string lights in background,people wearing thick coats,1.114,0,Reverse Control,left,False
+noname,i72.jpg,airplane with spinning propeller,small green airplane on ground,0.635,0,Trial,right,False
+noname,i32.jpg,three gold figures against floral wall,golden statues between wooden frames,0.237,0,Trial,right,False
+noname,i65.jpg,two black-haired women smiling ,white and orange signs on wall,0.236,0,Trial,left,False
+noname,i76.jpg,seven children wearing colorful clothes,dark background behind children,0.123,0,Trial,left,False
+noname,i26.jpg,white building behind dark trees,wet road next to sidewalk,0.3,0,Trial,left,False
+noname,i83.jpg,rocky beach with blue water,small white waves crashing into rocks,0.466,0,Reverse Control,left,False
+noname,i13.jpg,brown bed with wooden frame,blank white room with bed,0.224,0,Trial,left,False
+noname,i20.jpg,cars halfway submerged in mud,cars without windows and doors,0.27,0,Trial,left,False
+noname,i94.jpg,three children wearing red shirts,arms squeezing dye out of shirt,0.318,0,Reverse Control,left,False
+noname,i81.jpg,slices of brown cake with dark raisins,white table name card in background,0.044,0,Trial,left,True
+noname,i79.jpg,shallow boats on shore,shore of island,0.184,0,Trial,right,False
+noname,i6.jpg,two water bottles on floor,"pink, purple, and blue lights",0.035,0,Trial,right,False
+noname,i63.jpg,sun rays peeking through shrubs,field of grass under sun,0.339,0,Trial,left,False
+noname,i85.jpg,heart shaped light on traffic post,white van driving in background,0.362,0,Trial,right,False
+noname,i13.jpg,brown bed with wooden frame,doorway to the right,0.486,0,Trial,left,False
+noname,i79.jpg,shallow boats on shore,tall palm tree on beach,0.391,0,Trial,left,False
+noname,i1.jpg,man and woman smiling,green grass in front,0.18,0,Trial,left,False
+noname,i30.jpg,black hooded person with jeans,stormy rocky beach,0.001,0,Trial,right,False
+noname,i79.jpg,shore of island,tall palm tree on beach,0.397,0,Trial,left,False
+noname,i62.jpg,woman picking up french fries,dim lamp over dark restaurant,0.21,0,Trial,right,False
+noname,i9.jpg,three orange figures on motorcycle,wooden wall behind motorcycles,0.001,0,Trial,right,False
+noname,i87.jpg,traditionally clothed man wearing glasses,flower necklaces on man praying,0.221,0,Reverse Control,left,False
+noname,i36.jpg,red and white dresses on mannequins,fancy dresses on display,0.276,0,Reverse Control,left,False
+noname,i21.jpg,two wooden trays with pastries,bar behind pastry trays,0.014,0,Reverse Control,left,False
+noname,i60.jpg,street performance in Japan,the sun is far away,0.031,0,Nonsense Control - Left,right,False
+noname,i5.jpg,three middle-aged men playing instruments,music notes on piano stand,0.112,0,Trial,left,False
+noname,i21.jpg,two wooden trays with pastries,bar behind pastry trays,0.001,0,Trial,right,False
+noname,i43.jpg,woman in red vest standing,crowd of people beneath umbrellas,0.218,0,Trial,right,False
+noname,i3.jpg,rockstars with colorful tights,four musicians' knee-length hair,0.146,0,Reverse Control,right,False
+noname,i35.jpg,red lantern hanging in passageway,red lantern with Japanese writing,0.222,0,Trial,right,False
+noname,i28.jpg,black fence behind potted trees,"sign saying ""Barrett Funeral Home""",0.001,0,Trial,right,False
+noname,i10.jpg,five children with inflatable panda,an inflatable panda,0.206,0,Trial,right,False
+noname,i15.jpg,two women with sunglasses sitting,water behind the restaurant,0.248,0,Trial,right,False
+noname,i72.jpg,small green airplane on ground,buildings in trees behind airplane,0.097,0,Trial,left,True
+noname,i24.jpg,old-fashioned cars on display,a museum of transportation,0.004,0,Trial,right,False
+noname,i4.jpg,clown tying a green balloon,clown with balloons on pedestrian street,0.712,0,Trial,right,False
+noname,i44.jpg,candies in display case,chocolates and sweets on display,0.215,0,Trial,right,False
+noname,i4.jpg,two women in the background,clown tying a green balloon,0.136,0,Trial,right,False
+noname,i1.jpg,white man holding puppy,gray barn in background,0.146,0,Trial,right,False
+noname,i78.jpg,butterfly sitting on man's finger,man wearing thin black sunglasses,0.001,0,Trial,left,False
+noname,i35.jpg,Japanese house behind snow-covered tree,red lantern with Japanese writing,0.133,0,Trial,right,False
+noname,i47.jpg,alley between gray buildings,tall buildings behind gray homes,0.001,0,Trial,right,False
+noname,i74.jpg,Christmas trees with ornaments,building with white pillars on three floors,0.075,0,Trial,right,False
+noname,i42.jpg,man taking photos in corner,woman with sunglasses on head in front,0.27,0,Trial,right,False
+noname,i22.jpg,gothic castle on mowed grass,cloud-filled sky behind castle,0.338,0,Trial,right,False
+noname,i88.jpg,wooden chairs and dining tables,pictures on wall in background,0.001,0,Trial,left,False
+noname,i9.jpg,three orange figures on motorcycle,two black and blue motorcycles,0.001,0,Trial,right,False
+noname,i97.jpg,person wearing black winter coat,gray wall with colorful designs,0.05,0,Trial,left,False
+noname,i35.jpg,"green, traditional Japanese rooftop",red lantern with Japanese writing,0.327,0,Trial,left,False
+noname,i88.jpg,interior of white house,pictures on wall in background,0.016,0,Trial,left,False
+noname,i79.jpg,shallow boats on shore,There are seven days in a week,0.056,0,Nonsense Control - Left,right,False
+noname,i21.jpg,two wooden trays with pastries,bar behind pastry trays,0.011,0,Trial,left,False
+noname,i32.jpg,three gold figures against floral wall,gold floral designs on wall,0.077,0,Trial,right,False
+noname,i6.jpg,man in black playing a trumpet,"pink, purple, and blue lights",0.084,0,Trial,right,False
+noname,i80.jpg,people wearing thick coats,huge bonfire at center,0.63,0,Trial,left,False
+noname,i16.jpg,close up image of cat,close up of cat's whiskers,0.349,0,Trial,left,False
+noname,i33.jpg,brown wooden cabinets behind boy,decorated white refrigerator behind counter,0.294,0,Trial,left,False
+noname,i4.jpg,two women in the background,clown with balloons on pedestrian street,0.309,0,Trial,right,False
+noname,i87.jpg,flower necklaces on man praying,serious man with hands folded in prayer,0.459,0,Trial,left,False
+noname,i7.jpg,runners running a marathon,people cheering towards the left,0.001,0,Trial,right,False
+noname,i33.jpg,boy clutching and drinking juicebox,cereal and apple juice before boy,0.454,0,Trial,right,False
+noname,i79.jpg,people laying on beach,shore of island,0.203,0,Trial,right,False
+noname,i97.jpg,person looking at street art,person wearing black winter coat,0.728,0,Trial,right,False
+noname,i44.jpg,customer in black viewing candies,candies in display case,0.217,0,Trial,left,False
+noname,i22.jpg,gothic castle on mowed grass,castle in between two buildings,0.4,0,Trial,right,False
+noname,i10.jpg,five small children playing,an inflatable panda,0.443,0,Trial,right,False
+noname,i10.jpg,large building behind the panda,an inflatable panda,0.34,0,Trial,right,False
+noname,i58.jpg,person standing in the middle of the street,cars parked on street,0.524,0,Trial,left,False
+noname,i17.jpg,dog looking towards the left,people's legs with white pants,0.163,0,Trial,right,False
+noname,i12.jpg,woman and two children smiling,woman squatting near two children,0.076,0,Reverse Control,right,False
+noname,i23.jpg,kitchen next to the bookshelf,TV turned on in background,0.529,0,Trial,right,False
+noname,i42.jpg,Chinese New Year dragon dance,woman with sunglasses on head in front,0.038,0,Trial,right,False
+noname,i22.jpg,castle in between two buildings,cloud-filled sky behind castle,0.829,0,Trial,left,False
+noname,i78.jpg,white man smiling with butterfly,reflection of people in man's sunglasses,0.185,0,Trial,right,False
+noname,i26.jpg,white building behind dark trees,bushes and signs on sidewalk,0.241,0,Trial,left,False
+noname,i56.jpg,white woman on wooden chair,white wall and gray sofa in the background,0.001,0,Trial,left,False
+noname,i58.jpg,cars parked on street,electric wire above the street,0.441,0,Trial,right,False
+noname,i83.jpg,wooden Tiki statue on beach,small white waves crashing into rocks,1.331,0,Trial,right,False
+noname,i33.jpg,cereal and apple juice before boy,brown wooden cabinets behind boy,0.231,0,Trial,right,False
+noname,i63.jpg,sun rays peeking through shrubs,green moss on rock path,0.234,0,Trial,right,False
+noname,i4.jpg,clown with balloons on pedestrian street,clown tying a green balloon,0.224,0,Trial,right,False
+noname,i62.jpg,woman picking up french fries,two men sitting in background,0.188,0,Trial,right,False
+noname,i43.jpg,woman in red vest standing,blue and white striped umbrellas,0.17,0,Trial,right,False
+noname,i12.jpg,woman and two children smiling,a house behind three people,0.128,0,Trial,left,True
+noname,i36.jpg,women looking at displayed dresses,silhouette of woman walking left,1.278,0,Trial,left,False
+noname,i97.jpg,person looking at street art,gray wall with colorful designs,0.095,0,Reverse Control,right,False
+noname,i13.jpg,brown bed with wooden frame,large windows letting in sunlight,0.06,0,Trial,left,False
+noname,i65.jpg,two women sitting with Chinese menu,its cold during the winter,0.001,0,Nonsense Control - Left,right,False
+noname,i20.jpg,four cars with graffiti,large land with red mud,1.076,0,Trial,left,False
+noname,i56.jpg,dark-haired toddler smiling ,white woman holding toddler,0.226,0,Reverse Control,right,False
+noname,i80.jpg,people wearing thick coats,crowd surrounding bonfire,0.108,0,Trial,right,False
+noname,i31.jpg,grocery market behind empty lot,red 'Greenwood Market' sign ,0.189,0,Reverse Control,right,False
+noname,i4.jpg,clown tying a green balloon,orange bucket with colorful balloons,0.177,0,Trial,left,False
+noname,i1.jpg,white man holding puppy,man and woman smiling,0.426,0,Trial,right,False
+noname,i92.jpg,boy with a can on his head,man putting can on boy's head,0.098,0,Trial,right,False
+noname,i60.jpg,female and male acrobrats in white suits,Books are for reading,0.185,0,Nonsense Control - Right,left,False
+noname,i89.jpg,scuba diver wearing yellow flippers,coral reef behind scuba diver,0.199,0,Trial,right,False
+noname,i60.jpg,acrobat doing handstands on man's head,street performance in Japan,0.669,0,Trial,left,False
+noname,i47.jpg,trees on the side of the street,telephone wires above street,0.031,0,Trial,right,False
+noname,i76.jpg,girl with red ribbons in hair,dark background behind children,0.146,0,Trial,right,False
+noname,i58.jpg,person standing in the middle of the street,electric wire above the street,0.001,0,Trial,left,False
+noname,i92.jpg,white man and white boy,man putting can on boy's head,0.408,0,Trial,right,False
+noname,i6.jpg,two water bottles on floor,"pink, purple, and blue lights",0.001,0,Trial,left,False
+noname,i74.jpg,sculpture of man looking up,building with white pillars on three floors,0.409,0,Trial,right,False
+noname,i89.jpg,coral reef behind scuba diver,person scuba diving underwater,0.245,0,Trial,right,False
+noname,i24.jpg,airplane figures hanging from ceiling,a museum of transportation,0.045,0,Trial,right,False
+noname,i76.jpg,seven children wearing colorful clothes,summers are hot ,0.07,0,Nonsense Control - Left,right,False
+noname,i58.jpg,downhill street,person standing in the middle of the street,2.738,0,Trial,right,False
+noname,i56.jpg,white woman holding toddler,white woman on wooden chair,0.037,0,Trial,right,False
+noname,i5.jpg,three middle-aged men playing instruments,dark jazz club,0.001,0,Trial,right,False
+noname,i12.jpg,woman and two children smiling,a house behind three people,0.001,0,Trial,right,True
+noname,i26.jpg,bushes and signs on sidewalk,large white and glass building,1.17,0,Trial,left,False
+noname,i83.jpg,person in water in background,rocky beach with blue water,0.001,0,Trial,right,False
+noname,i7.jpg,runners running a marathon,people cheering towards the left,0.66,0,Trial,left,False
+noname,i56.jpg,dark-haired toddler smiling ,white woman on wooden chair,0.063,0,Trial,right,False
+noname,i27.jpg,bright lights on second floor,black pillars on left wall,0.495,0,Trial,left,False
+noname,i33.jpg,decorated white refrigerator behind counter,There are seven days in a week,0.015,0,Nonsense Control - Left,right,False
+noname,i81.jpg,slices of brown cake with dark raisins,dessert on white plate,0.001,0,Trial,right,False
+noname,i32.jpg,gold floral designs on wall,yellow circle at top,0.692,0,Trial,left,False
+noname,i10.jpg,an inflatable panda,large building behind the panda,1.245,0,Reverse Control,right,False
+noname,i72.jpg,airplane with three wheels,small green airplane on ground,0.397,0,Trial,left,False
+noname,i42.jpg,Chinese New Year dragon dance,woman with sunglasses on head in front,0.181,0,Trial,left,False
+noname,i18.jpg,tractor next to soil,trees behind construction,0.107,0,Trial,right,False
+noname,i60.jpg,crowd watching Japanese street acrobats,acrobat doing handstands on man's head,0.001,0,Trial,right,False
+noname,i85.jpg,heart shaped light on traffic post,white van driving in background,0.001,0,Reverse Control,left,False
+noname,i6.jpg,dark jazz club,"pink, purple, and blue lights",0.001,0,Reverse Control,left,False
+noname,i17.jpg,dog looking towards the left,black brown and white dog,0.405,0,Trial,right,False
+noname,i4.jpg,clown with balloons on pedestrian street,orange bucket with colorful balloons,0.313,0,Trial,left,False
+noname,i17.jpg,black brown and white dog,tempratures in the america are in fahrenheit,0.314,0,Nonsense Control - Right,left,False
+noname,i28.jpg,black fence behind potted trees,funeral home at night,1.743,0,Trial,left,False
+noname,i15.jpg,two women smiling with food,water behind the restaurant,0.15,0,Trial,right,False
+noname,i15.jpg,two women smiling with food,cups and sauces on table,1.923,0,Trial,right,False
+noname,i3.jpg,rockstars with colorful tights,A rock band playing music,0.418,0,Trial,right,False
+noname,i60.jpg,female and male acrobrats in white suits,cows produce milk,0.425,0,Nonsense Control - Right,left,False
+noname,i83.jpg,rocky beach with blue water,small white waves crashing into rocks,0.436,0,Trial,right,False
+noname,i15.jpg,water behind the restaurant,the sun is far away,0.026,0,Nonsense Control - Right,left,False
+noname,i94.jpg,three children wearing red shirts,arms squeezing dye out of shirt,0.001,0,Trial,left,False
+noname,i32.jpg,golden statues between wooden frames,yellow circle at top,0.157,0,Trial,left,False
+noname,i19.jpg,pastries on wax paper,"yellow, strawberry, and chocolate tarts",0.998,0,Trial,left,False
+noname,i31.jpg,grocery market behind empty lot,empty lot with snow and tire marks,0.238,0,Trial,left,False
+noname,i10.jpg,five small children playing,an inflatable panda,0.088,0,Trial,left,False
+noname,i21.jpg,two wooden trays with pastries,bar behind pastry trays,0.006,0,Reverse Control,right,False
+noname,i93.jpg,two women with hands on hips,old pink building behind clotheslines,0.008,0,Trial,left,False
+noname,i27.jpg,worm's eye view inside building,black pillars on left wall,0.174,0,Reverse Control,left,False
+noname,i31.jpg,grocery market behind empty lot,red 'Greenwood Market' sign ,0.147,0,Trial,right,False
+noname,i5.jpg,three middle-aged men playing instruments,dark jazz club,0.452,0,Trial,left,False
+noname,i8.jpg,woman wearing black sunglasses,woman with blank facial expression,0.308,0,Trial,right,False
+noname,i23.jpg,trees behind kitchen windows,TV turned on in background,0.001,0,Trial,left,False
+noname,i65.jpg,two black-haired women smiling ,signs with Chinese characters,0.001,0,Trial,left,False
+noname,i19.jpg,pastries on wax paper,price signs behind pastries,0.062,0,Trial,right,False
+noname,i12.jpg,woman squatting near two children,a house behind three people,0.399,0,Trial,right,False
+noname,i5.jpg,dark jazz club,music notes on piano stand,0.076,0,Trial,left,False
+noname,i37.jpg,stone house behind blue tent,large rocks surrounding blue tent,0.752,0,Reverse Control,right,False
+noname,i17.jpg,black brown and white dog,dog looking towards the left,0.492,0,Reverse Control,right,False
+noname,i92.jpg,man wearing black turtleneck sweater,man putting can on boy's head,0.316,0,Trial,right,False
+noname,i43.jpg,crowd of people beneath umbrellas,blue and white striped umbrellas,0.109,0,Trial,left,False
+noname,i6.jpg,dark jazz club,"pink, purple, and blue lights",0.137,0,Trial,right,False
+noname,i19.jpg,pastries on wax paper,tarts and pastries on tray,0.079,0,Trial,left,False
+noname,i19.jpg,pastries on wax paper,price signs behind pastries,0.684,0,Reverse Control,left,False
+noname,i30.jpg,person taking a photo,stormy rocky beach,0.54,0,Trial,right,False
+noname,i74.jpg,sculpture of man looking up,people sitting on bench under trees,1.416,0,Trial,right,False
+noname,i72.jpg,small green airplane on ground,airplane with three wheels,1.453,0,Trial,left,False
+noname,i32.jpg,golden statues between wooden frames,gold floral designs on wall,0.2,0,Trial,left,False
+noname,i78.jpg,white man smiling with butterfly,butterfly sitting on man's finger,0.609,0,Trial,right,False
+noname,i20.jpg,four cars with graffiti,cars without windows and doors,1.144,0,Trial,left,False
+noname,i12.jpg,brown-haired woman wearing jeans,a house behind three people,0.186,0,Trial,right,False
+noname,i21.jpg,price signs behind pastries,bar behind pastry trays,2.99,0,Trial,right,False
+noname,i18.jpg,snow on top of soil,trees behind construction,0.151,0,Trial,right,False
+noname,i31.jpg,snow-covered car parked by market,red 'Greenwood Market' sign ,0.186,0,Trial,right,False
+noname,i37.jpg,stone house behind blue tent,large rocks surrounding blue tent,0.223,0,Trial,right,False
+noname,i14.jpg,sculpture of woman's eyes closed,leafless trees above sculpture,0.256,0,Trial,right,False
+noname,i17.jpg,people's legs with white pants,a dog standing in front,1.208,0,Trial,left,False
+noname,i47.jpg,tall buildings behind gray homes,telephone wires above street,1.088,0,Trial,left,False
+noname,i31.jpg,empty lot with snow and tire marks,red 'Greenwood Market' sign ,2.441,0,Trial,right,False
+noname,i72.jpg,airplane with three wheels,airplane with spinning propeller,0.78,0,Trial,left,False
+noname,i19.jpg,pastries on wax paper,salt is slaty,0.363,0,Nonsense Control - Right,left,False
+noname,i37.jpg,five donkeys nearby blue tent,stone house behind blue tent,0.479,0,Reverse Control,left,False
+noname,i63.jpg,green moss on rock path,field of grass under sun,1.568,0,Trial,left,False
+noname,i32.jpg,golden statues between wooden frames,gold floral designs on wall,0.001,0,Trial,right,False
+noname,i76.jpg,girl with red ribbons in hair,seven children wearing colorful clothes,0.115,0,Trial,right,False
+noname,i41.jpg,many white boats by dock,blue harbor with docked boats,0.617,0,Trial,right,False
+noname,i82.jpg,woman in black dress holding glass,its cold during the winter,0.034,0,Nonsense Control - Right,left,False
+noname,i19.jpg,"yellow, strawberry, and chocolate tarts",price signs behind pastries,0.438,0,Trial,right,False
+noname,i21.jpg,man pouring wine at bar,bar behind pastry trays,0.113,0,Trial,right,False
+noname,i10.jpg,five children with inflatable panda,five small children playing,0.174,0,Trial,right,False
+noname,i62.jpg,two men sitting in background,dim lamp over dark restaurant,0.269,0,Trial,left,False
+noname,i18.jpg,snow on top of soil,trees behind construction,0.282,0,Trial,left,False
+noname,i80.jpg,trees with string lights in background,crowd surrounding bonfire,0.001,0,Trial,right,False
+noname,i78.jpg,butterfly sitting on man's finger,reflection of people in man's sunglasses,0.001,0,Trial,right,False
+noname,i31.jpg,grocery market behind empty lot,red 'Greenwood Market' sign ,0.001,0,Trial,left,False
+noname,i76.jpg,seven dark-haired children smiling,dark background behind children,0.001,0,Trial,right,False
+noname,i79.jpg,people laying on beach,shallow boats on shore,0.032,0,Trial,right,False
+noname,i12.jpg,woman squatting near two children,woman and two children smiling,0.272,0,Trial,right,False
+noname,i14.jpg,sculpture of woman in wall,brown sculpture within a wall,0.359,0,Trial,right,False
+noname,i14.jpg,sculpture of woman's eyes closed,brown sculpture within a wall,0.807,0,Trial,right,False
+noname,i35.jpg,"green, traditional Japanese rooftop",red lantern with Japanese writing,0.269,0,Trial,right,False
+noname,i24.jpg,old-fashioned cars on display,museum with automobile figures,0.001,0,Trial,right,False
+noname,i63.jpg,yellow Labrador laying on grass,green moss on rock path,0.001,0,Trial,right,True
+noname,i35.jpg,"green, traditional Japanese rooftop",Japanese house behind snow-covered tree,0.192,0,Trial,left,False
+noname,i92.jpg,white man and white boy,man wearing black turtleneck sweater,0.343,0,Trial,right,False
+noname,i81.jpg,dessert on white plate,white table name card in background,0.054,0,Trial,left,False
+noname,i85.jpg,white van driving in background,large brown house in blurred background,0.001,0,Trial,left,False
+noname,i26.jpg,wet road next to sidewalk,bushes and signs on sidewalk,0.631,0,Trial,right,False
+noname,i82.jpg,brick wall in background,landscape painting with gold frame,0.435,0,Trial,right,False
+noname,i65.jpg,two black-haired women smiling ,signs with Chinese characters,0.039,0,Reverse Control,right,False
+noname,i87.jpg,man wearing white traditional hat,serious man with hands folded in prayer,0.4,0,Trial,right,False
+noname,i93.jpg,two women with hands on hips,ground built with gray stones,0.123,0,Trial,left,False
+noname,i80.jpg,people wearing thick coats,trees with string lights in background,0.978,0,Trial,left,False
+noname,i21.jpg,two wooden trays with pastries,bar behind pastry trays,0.001,0,Reverse Control,right,False
+noname,i8.jpg,woman with blank facial expression,blond hair in front of woman,0.476,0,Trial,left,False
+noname,i23.jpg,kitchen next to the bookshelf,trees behind kitchen windows,0.331,0,Trial,right,False
+noname,i60.jpg,street performance in Japan,female and male acrobrats in white suits,0.066,0,Trial,right,False
+noname,i16.jpg,"brown, black, and white cat",close up image of cat,0.507,0,Trial,right,False
+noname,i7.jpg,people cheering towards the left,clock hanging above red banner,0.191,0,Trial,left,False
+noname,i8.jpg,a woman with brown hair,woman with blank facial expression,0.342,0,Trial,right,False
+noname,i26.jpg,white building behind dark trees,large white and glass building,0.075,0,Trial,left,False
+noname,i14.jpg,sculpture of woman in wall,leafless trees above sculpture,0.341,0,Trial,right,False
+noname,i14.jpg,brown sculpture within a wall,leafless trees above sculpture,0.1,0,Trial,right,False
+noname,i82.jpg,woman in black dress holding glass,landscape painting with gold frame,0.049,0,Trial,left,False
+noname,i19.jpg,pastries on wax paper,"yellow, strawberry, and chocolate tarts",0.001,0,Reverse Control,right,False
+noname,i9.jpg,two black and blue motorcycles,wooden wall behind motorcycles,0.123,0,Trial,left,False
+noname,i22.jpg,castle in between two buildings,cloud-filled sky behind castle,0.171,0,Reverse Control,left,False
+noname,i47.jpg,tall buildings behind gray homes,trees on the side of the street,1.804,0,Trial,left,False
+noname,i94.jpg,three children wearing blue jeans crouched,arms squeezing dye out of shirt,0.977,0,Trial,right,False
+noname,i76.jpg,seven children wearing colorful clothes,seven dark-haired children smiling,1.057,0,Trial,left,False
+noname,i41.jpg,blue harbor with docked boats,green hill with colorful houses,0.181,0,Trial,right,False
+noname,i1.jpg,man and woman smiling,gray barn in background,0.585,0,Trial,right,False
+noname,i43.jpg,blue and white striped umbrellas,crowd of people beneath umbrellas,0.209,0,Trial,left,False
+noname,i17.jpg,black brown and white dog,a dog standing in front,0.426,0,Trial,left,False
+noname,i93.jpg,old pink building behind clotheslines,ground built with gray stones,0.649,0,Trial,left,False
+noname,i23.jpg,ceiling fan above kitchen table,trees behind kitchen windows,0.001,0,Trial,right,False
+noname,i42.jpg,Chinese New Year dragon dance,performers carrying yellow-red dragon,0.271,0,Trial,left,False
+noname,i78.jpg,butterfly sitting on man's finger,reflection of people in man's sunglasses,0.01,0,Trial,left,False
+noname,i82.jpg,two dressed up women smiling,landscape painting with gold frame,0.011,0,Trial,right,False

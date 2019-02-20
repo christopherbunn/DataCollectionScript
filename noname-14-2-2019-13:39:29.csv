@@ -1,0 +1,5 @@
+Participant Initials,Image name,Choice,Alternative,Duration,Number of Command Repeats,Run Type,Key Pressed,Passed Repeat Key Threshold
+noname,i295.jpg,Asian boy jumping in air,Asian children wearing red shorts,4.872,0,Trial,left,False
+noname,i295.jpg,paper is for writing,Asian children wearing red shorts,0.002,0,Nonsense Control - Left,left,False
+noname,i295.jpg,happy school children greeting and waving,Asian children wearing red shorts,0.002,0,Trial,left,False
+noname,i295.jpg,happy school children greeting and waving,Asian children wearing white shirts,0.064,0,Trial,left,False
