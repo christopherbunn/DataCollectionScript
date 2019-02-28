@@ -260,6 +260,8 @@ class RunExperiment:
     def get_labels(self, image):
         all_labels = self.descriptions[image]
         chosen_labels = []
+        # Not randomized pairs - will be randomized and placed into self.label_pairs
+        temp_pairs = list()
         # From all of the available descriptions, choose a subset of max_num_of_random_labels
         while len(chosen_labels) < max_num_of_random_labels:
             idx = random.randint(0, len(all_labels) - 1)
@@ -274,8 +276,20 @@ class RunExperiment:
                     # both the same pair and the opposite does not exist
                     if label_l != label_r and (image, label_r, label_l, "Trial") not in self.label_pairs \
                             and (image, label_l, label_r, "Trial") not in self.label_pairs:
-                        self.label_pairs.append((image, label_l, label_r, "Trial"))
+                        temp_pairs.append((image, label_l, label_r, "Trial"))
                         curr_num_of_pairs += 1
+        # After the label pairs are created, randomly swap the description between the pairs
+        while len(temp_pairs) != 0:
+            curr_pair = temp_pairs.pop()
+            choice = random.randint(0,1)
+            # If 1, swap the values
+            if choice == 1:
+                # print("Swapping...") # Use to validate pairs have swapped
+                # print("Before: ", curr_pair)
+                # print("After: ", (curr_pair[0], curr_pair[2], curr_pair[1], curr_pair[3]))
+                self.label_pairs.append((curr_pair[0], curr_pair[2], curr_pair[1], curr_pair[3]))
+            else: # Leave the pairs as written by the program
+                self.label_pairs.append((curr_pair[0], curr_pair[1], curr_pair[2], curr_pair[3]))
 
     def get_nonsense_list(self, num_of_nonsense, nonsense_path):
         nonsense = []
