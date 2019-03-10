@@ -15,7 +15,8 @@ right_key = "2"
 repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
 pause_experiment_key = "<Return>"
-result_directory = "../Results/"
+result_directory = "./results/"
+label_pairs_directory = "./label_pairs/"
 max_repeat = 7
 reverse_percentage = 0.10
 nonsense_percentage = 0.05
@@ -76,7 +77,9 @@ class SetParameters:
             self.nonsense_path = nonsense_path_box.get()
             participant_name = res_path_box.get()
             now = datetime.datetime.now()
-            self.res_path = result_directory + self.res_path + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
+            self.res_path = result_directory + participant_name + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
+                str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
+            self.label_pairs_path = label_pairs_directory + participant_name + "-label_pairs-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             window.destroy()
 
@@ -119,9 +122,10 @@ class SetParameters:
         window.mainloop()
 
     def __init__(self):
-        self.img_path = 'assets/BenchmarkIMAGES'
-        self.desc_path = 'assets/descriptions.csv'
-        self.res_path = 'noname'
+        self.img_path = ''
+        self.desc_path = ''
+        self.res_path = ''
+        self.label_pairs_path = ''
         self.num_img = 0
         self.break_size = 0
         self.get_params()
@@ -478,6 +482,18 @@ class RunExperiment:
                     if j != 0 and value != '':
                         self.descriptions[file_name].append(value)
 
+    def write_label_pairs(self,label_pairs_path):
+        if path.isfile(label_pairs_path) is not True:
+            with open(label_pairs_path, 'a') as csvfile:
+                filewriter = csv.writer(csvfile, delimiter=',',
+                                        quotechar='\"', quoting=csv.QUOTE_MINIMAL)
+                filewriter.writerow(['Image Name', 'Left Label', 'Right Label'])
+        with open(label_pairs_path, 'a') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',',
+                                    quotechar='\"', quoting=csv.QUOTE_MINIMAL)
+            for pair in self.label_pairs[::-1]: # Reverse needed since label_pairs is treated as a queue in experiment
+                filewriter.writerow([pair[0], pair[1], pair[2]])
+
     def __init__(self, in_params):
         self.descriptions = {}
         self.image_files = list()
@@ -486,6 +502,7 @@ class RunExperiment:
         self.window.geometry("%dx%d+0+0" % (self.window.winfo_screenwidth(), self.window.winfo_screenheight()))
         self.read_desc(in_params.desc_path)
         self.res_path = in_params.res_path
+        self.label_pairs_path = in_params.label_pairs_path
         self.my_images = dict()
         self.label_pairs = list()
         self.trial_number = 1
@@ -512,6 +529,7 @@ class RunExperiment:
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path))
             self.get_labels(image)
         self.add_control_cases(in_params.nonsense_path)
+        self.write_label_pairs(in_params.label_pairs_path)
         self.run_trial(in_params.res_path)
 
 
