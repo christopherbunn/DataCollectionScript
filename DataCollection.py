@@ -304,7 +304,7 @@ class RunExperiment:
             nonsense.append(sentence[0])
         final_list = []
         while len(final_list) < num_of_nonsense:
-            final_list.append(random.choice(nonsense))
+            final_list.append((random.choice(nonsense), "Nonsense"))
         return final_list
 
     def add_control_cases(self, nonsense_path):
@@ -367,8 +367,10 @@ class RunExperiment:
 
         curr_label_pair = self.label_pairs.pop()
         self.curr_image_name = curr_label_pair[0]
-        self.left_label = curr_label_pair[1]
-        self.right_label = curr_label_pair[2]
+        self.left_label = curr_label_pair[1][0]
+        self.left_label_type = curr_label_pair[1][1]
+        self.right_label = curr_label_pair[2][0]
+        self.right_label_type = curr_label_pair[2][1]
         self.run_type = curr_label_pair[3]
         self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(),
                                      height=self.my_images[self.curr_image_name].height())
@@ -414,14 +416,8 @@ class RunExperiment:
         else:
             self.repeat_key_counter = 1
             self.last_key = pressed
-        if pressed == 'left':
-            choice = self.top_left_bttn['text']
-            alternative = self.top_right_bttn['text']
-        else:
-            choice = self.top_right_bttn['text']
-            alternative = self.top_left_bttn['text']
         say('next image')
-        self.write_entry(res_path, self.curr_image_name, choice, alternative)
+        self.write_entry(res_path, self.curr_image_name, self.top_left_bttn['text'], self.top_right_bttn['text'])
         self.write_repeat = False
         if len(self.label_pairs) == 0:
             say('This experiment is now over. Please call over the proctor to end the session.')
@@ -431,8 +427,10 @@ class RunExperiment:
             self.repeat_label_counter = 0
             curr_label_pair = self.label_pairs.pop()
             self.curr_image_name = curr_label_pair[0]
-            self.left_label = curr_label_pair[1]
-            self.right_label = curr_label_pair[2]
+            self.left_label = curr_label_pair[1][0]
+            self.left_label_type = curr_label_pair[1][1]
+            self.right_label = curr_label_pair[2][0]
+            self.right_label_type = curr_label_pair[2][1]
             self.run_type = curr_label_pair[3]
             self.window.title("Trial " + str(self.trial_number))
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
@@ -447,24 +445,20 @@ class RunExperiment:
             self.window.after(1, self.unlock_key)
             self.start_time = time.time()
 
-    def write_entry(self, res_path, img_name, choice, alternative):
+    def write_entry(self, res_path, img_name, left, right):
         if path.isfile(res_path) is not True:
             with open(res_path, 'a') as csvfile:
                 filewriter = csv.writer(csvfile, delimiter=',',
                                         quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Participant Initials', 'Image name', 'Left Option', 'Right Option', 'Duration',
+                filewriter.writerow(['Participant Initials', 'Image name', 'Left Option', 'Left Label Type', 'Right Option', 'Right Label Type', 'Duration',
                                      'Number of Command Repeats', 'Run Type', 'Key Chosen',
                                      'Passed Repeat Key Threshold'])
         with open(res_path, 'a') as csvfile:
             duration = round((self.end_time - self.start_time), 3)
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            if self.key_pressed == 'left':
-                filewriter.writerow([participant_name, img_name, choice, alternative, duration,
-                                     self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
-            elif self.key_pressed == 'right':
-                filewriter.writerow([participant_name, img_name, alternative, choice, duration,
-                                     self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
+            filewriter.writerow([participant_name, img_name, left, self.left_label_type, right, self.right_label_type, duration,
+                                    self.repeat_label_counter, self.run_type, self.key_pressed, self.write_repeat])
 
     def read_desc(self, desc_path):
         with open(desc_path, 'r') as f:
@@ -472,15 +466,19 @@ class RunExperiment:
             # reader = csv.reader(f)  # CSV File
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
-        for i, img_entry in enumerate(temp):
-            file_name = 'i' + img_entry[0] + '.jpg'
-            if i % 2 != 1:
-                self.image_files.append(file_name)
-                for j, value in enumerate(img_entry):
-                    if j == 1:
-                        self.descriptions[file_name] = list()
-                    if j != 0 and value != '':
-                        self.descriptions[file_name].append(value)
+        for i in range(0,len(temp), 2):
+            desc_row = temp[i]
+            type_row = temp[i+1]
+            file_name = 'i' + desc_row[0] + '.jpg'
+            self.image_files.append(file_name)
+            for j in range(len(desc_row)):
+                if j == 1:
+                    self.descriptions[file_name] = list()
+                if j != 0 and desc_row[j] != '':
+                    if type_row[j] != '':
+                        self.descriptions[file_name].append((desc_row[j], type_row[j]))
+                    else:
+                        self.descriptions[file_name].append((desc_row[j], 'no_type_data_provided'))
 
     def write_label_pairs(self,label_pairs_path):
         if path.isfile(label_pairs_path) is not True:
@@ -508,7 +506,9 @@ class RunExperiment:
         self.trial_number = 1
         self.curr_image_name = ''
         self.left_label = ''
+        self.left_label_type = ''
         self.right_label = ''
+        self.right_label_type = ''
         self.run_type = ''
         self.key_pressed = ''
         self.last_key = ''
