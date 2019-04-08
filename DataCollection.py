@@ -1,7 +1,6 @@
 import tkinter
 import tkinter as ttk
 import csv
-import random
 import time
 from functools import partial
 from PIL import ImageTk, Image
@@ -16,13 +15,9 @@ repeat_key = "<Key-space>"
 continue_key = "<Key-space>"
 pause_experiment_key = "<Return>"
 result_directory = "./results/"
-label_pairs_directory = "./label_pairs/"
+label_pairs_directory = "../New_Assets/LabelPairs/test.tsv"
 max_repeat = 7
-reverse_percentage = 0.10
-nonsense_percentage = 0.05
 participant_name = ""
-max_num_of_random_labels = 4
-max_num_of_pairs = 6
 break_trial=200
 
 
@@ -45,26 +40,20 @@ def say(text_to_say=None):
     os.system('say "' + text_to_say + ' "')
 
 
-class Entry:
-    image_name = ""
-    choice = ""
-    alternate = ""
-    choice_pos = ""
-    duration = 0.0
-    run_type = ""  # trial, control1, control2
-    num_repeats = ""
-
-
 class LabelPair:
     image_name = ""
-    left_label = ""
-    right_label = ""
+    left_desc = ""
+    left_desc_type = ""
+    right_desc = ""
+    right_desc_type = ""
     trial_type = ""
 
-    def __init__(self, in_image_name, in_left_label, in_right_label, in_trial_type):
+    def __init__(self, in_image_name, in_left_desc, in_left_desc_type, in_right_desc, in_right_desc_type, in_trial_type):
         self.image_name = in_image_name
-        self.left_label = in_left_label
-        self.right_label = in_right_label
+        self.left_desc = in_left_desc
+        self.left_desc_type = in_left_desc_type
+        self.right_desc = in_right_desc
+        self.right_desc_type = in_right_desc_type
         self.trial_type = in_trial_type
 
 
@@ -79,8 +68,6 @@ class SetParameters:
             now = datetime.datetime.now()
             self.res_path = result_directory + participant_name + "-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
                 str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
-            self.label_pairs_path = label_pairs_directory + participant_name + "-label_pairs-" + str(now.day) + "-" + str(now.month) + "-" + str(now.year) + "-" + \
-                str(now.hour) + ":" + str(now.minute) + ":" + str(now.second) + ".csv"
             window.destroy()
 
         window = tkinter.Tk()
@@ -90,8 +77,7 @@ class SetParameters:
         frame.columnconfigure(0, weight=1)
         frame.rowconfigure(0, weight=1)
 
-        field_labels = ["Image Location", "Description Location", "Participant Initials", "Nonsense File Path",
-                        "Number of Images", "Break Between Images (seconds)"]
+        field_labels = ["Image Location", "Label Pair Location", "Participant Initials"]
 
         img_path_box = ttk.StringVar()
         desc_path_box = ttk.StringVar()
@@ -105,18 +91,13 @@ class SetParameters:
 
         tkinter.Label(frame, text=field_labels[1]).grid(row=1, column=0, sticky='E')
         desc_entry = tkinter.Entry(frame, textvariable=desc_path_box)
-        desc_entry.insert(0, '../New_Assets/Descriptions/training.tsv')
+        desc_entry.insert(0, '../New_Assets/LabelPairs/test.tsv')
         desc_entry.grid(row=1, column=1, sticky='W')
 
         tkinter.Label(frame, text=field_labels[2]).grid(row=2, column=0, sticky='E')
         res_entry = tkinter.Entry(frame, textvariable=res_path_box)
         res_entry.insert(0, 'noname')
         res_entry.grid(row=2, column=1, sticky='W')
-
-        tkinter.Label(frame, text=field_labels[3]).grid(row=3, column=0, sticky='E')
-        nonsense_entry = tkinter.Entry(frame, textvariable=nonsense_path_box)
-        nonsense_entry.insert(0, '../New_Assets/facts.tsv')
-        nonsense_entry.grid(row=3, column=1, sticky='W')
 
         tkinter.Button(window, text="Run Experiment", command=save_parameters).grid(row=5)
         window.mainloop()
@@ -126,8 +107,6 @@ class SetParameters:
         self.desc_path = ''
         self.res_path = ''
         self.label_pairs_path = ''
-        self.num_img = 0
-        self.break_size = 0
         self.get_params()
 
 
@@ -261,94 +240,12 @@ class RunExperiment:
         self.window.bind(repeat_key, self.repeat_label)
         self.window.bind(pause_experiment_key, self.take_break)
 
-    def get_labels(self, image):
-        all_labels = self.descriptions[image]
-        chosen_labels = []
-        # Not randomized pairs - will be randomized and placed into self.label_pairs
-        temp_pairs = list()
-        # From all of the available descriptions, choose a subset of max_num_of_random_labels
-        while len(chosen_labels) < max_num_of_random_labels:
-            idx = random.randint(0, len(all_labels) - 1)
-            if all_labels[idx] not in chosen_labels:
-                chosen_labels.append(all_labels[idx])
-        curr_num_of_pairs = 0
-        # From the subset of pairs, create max_num_of_pairs amount of pairs
-        for label_l in chosen_labels:
-            for label_r in chosen_labels:
-                if curr_num_of_pairs < max_num_of_pairs:
-                    # Add to possible pairs if the chosen descriptions are not the same and
-                    # both the same pair and the opposite does not exist
-                    if label_l != label_r and (image, label_r, label_l, "Trial") not in self.label_pairs \
-                            and (image, label_l, label_r, "Trial") not in self.label_pairs:
-                        temp_pairs.append((image, label_l, label_r, "Trial"))
-                        curr_num_of_pairs += 1
-        # After the label pairs are created, randomly swap the description between the pairs
-        while len(temp_pairs) != 0:
-            curr_pair = temp_pairs.pop()
-            choice = random.randint(0,1)
-            # If 1, swap the values
-            if choice == 1:
-                # print("Swapping...") # Use to validate pairs have swapped
-                # print("Before: ", curr_pair)
-                # print("After: ", (curr_pair[0], curr_pair[2], curr_pair[1], curr_pair[3]))
-                self.label_pairs.append((curr_pair[0], curr_pair[2], curr_pair[1], curr_pair[3]))
-            else: # Leave the pairs as written by the program
-                self.label_pairs.append((curr_pair[0], curr_pair[1], curr_pair[2], curr_pair[3]))
-
-    def get_nonsense_list(self, num_of_nonsense, nonsense_path):
-        nonsense = []
-        with open(nonsense_path, 'r') as f:
-            reader = csv.reader(f)
-            temp = list(reader)
-        for i, sentence in enumerate(temp):
-            nonsense.append(sentence[0])
-        final_list = []
-        while len(final_list) < num_of_nonsense:
-            final_list.append((random.choice(nonsense), "Nonsense"))
-        return final_list
-
-    def add_control_cases(self, nonsense_path):
-        rev_pairs = []
-        nonsense_pairs = []
-        print("Regular", len(self.label_pairs))
-        # Reverse pair - 10% - Control 1
-        num_rev_pairs = len(self.label_pairs) * reverse_percentage
-        while len(rev_pairs) < num_rev_pairs:
-            old_pair = random.choice(self.label_pairs)
-            new_pair = (old_pair[0], old_pair[2], old_pair[1], "Reverse Control")
-            rev_pairs.append(new_pair)
-        print("Reverse Controls", len(rev_pairs))
-        # Nonsense pair - 5% - Control 2
-        num_nonsense_pairs = len(self.label_pairs) * nonsense_percentage
-        new_labels = self.get_nonsense_list(num_nonsense_pairs, nonsense_path)
-        left_nonsense_pair = num_nonsense_pairs / 2
-        right_nonsense_pair = num_nonsense_pairs - left_nonsense_pair
-        new_labels_pos = 0
-        while len(nonsense_pairs) < num_nonsense_pairs:
-            old_pair = random.choice(self.label_pairs)
-            if left_nonsense_pair > 0:  # Left
-                new_pair = (old_pair[0], new_labels[new_labels_pos], old_pair[2], "Nonsense Control - Left")
-                left_nonsense_pair -= 1
-            else:
-                new_pair = (old_pair[0], old_pair[1], new_labels[new_labels_pos], "Nonsense Control - Right")
-                right_nonsense_pair -= 1
-            nonsense_pairs.append(new_pair)
-            new_labels_pos += 1
-        print("Nonsense Pairs", len(nonsense_pairs))
-        for new_pairs in rev_pairs:
-            self.label_pairs.append(new_pairs)
-        for new_pairs in nonsense_pairs:
-            self.label_pairs.append(new_pairs)
-        random.shuffle(self.label_pairs)
-        print("Total pairs: ", len(self.label_pairs))
 
     def read_label(self, event=None):
         self.lock_key()
-        #beep()
         time.sleep(0.5)
         say('left: ' + self.left_label.replace('\'', '\\\''))
         time.sleep(1)
-        #beep()
         time.sleep(0.5)
         say('right: ' + self.right_label.replace('\'', '\\\''))
         self.window.after(1, self.unlock_key)
@@ -365,13 +262,13 @@ class RunExperiment:
         button_frame = ttk.Frame(self.window)
         button_frame.pack()
 
-        curr_label_pair = self.label_pairs.pop()
-        self.curr_image_name = curr_label_pair[0]
-        self.left_label = curr_label_pair[1][0]
-        self.left_label_type = curr_label_pair[1][1]
-        self.right_label = curr_label_pair[2][0]
-        self.right_label_type = curr_label_pair[2][1]
-        self.run_type = curr_label_pair[3]
+        curr_label_pair = self.label_pairs.pop(0)
+        self.curr_image_name = curr_label_pair.image_name
+        self.left_label = curr_label_pair.left_desc
+        self.left_label_type = curr_label_pair.left_desc_type
+        self.right_label = curr_label_pair.right_desc
+        self.right_label_type = curr_label_pair.right_desc_type
+        self.run_type = curr_label_pair.trial_type
         self.img_canvas = ttk.Canvas(img_frame, width=self.my_images[self.curr_image_name].width(),
                                      height=self.my_images[self.curr_image_name].height())
         self.img_canvas.pack()
@@ -425,13 +322,13 @@ class RunExperiment:
         else:
             self.trial_number += 1
             self.repeat_label_counter = 0
-            curr_label_pair = self.label_pairs.pop()
-            self.curr_image_name = curr_label_pair[0]
-            self.left_label = curr_label_pair[1][0]
-            self.left_label_type = curr_label_pair[1][1]
-            self.right_label = curr_label_pair[2][0]
-            self.right_label_type = curr_label_pair[2][1]
-            self.run_type = curr_label_pair[3]
+            curr_label_pair = self.label_pairs.pop(0)
+            self.curr_image_name = curr_label_pair.image_name
+            self.left_label = curr_label_pair.left_desc
+            self.left_label_type = curr_label_pair.left_desc_type
+            self.right_label = curr_label_pair.right_desc
+            self.right_label_type = curr_label_pair.right_desc_type
+            self.run_type = curr_label_pair.trial_type
             self.window.title("Trial " + str(self.trial_number))
             self.img_canvas.itemconfig(self.img_on_canvas, image=self.my_images[self.curr_image_name])
             self.img_canvas.config(width=self.my_images[self.curr_image_name].width(),
@@ -463,38 +360,17 @@ class RunExperiment:
     def read_desc(self, desc_path):
         with open(desc_path, 'r') as f:
             reader = csv.reader(f, delimiter='\t') # TSV File
-            # reader = csv.reader(f)  # CSV File
             temp = list(reader)
         temp = temp[1:]  # Remove table headers
-        for i in range(0,len(temp), 2):
-            desc_row = temp[i]
-            type_row = temp[i+1]
-            file_name = 'i' + desc_row[0] + '.jpg'
-            self.image_files.append(file_name)
-            for j in range(len(desc_row)):
-                if j == 1:
-                    self.descriptions[file_name] = list()
-                if j != 0 and desc_row[j] != '':
-                    if type_row[j] != '':
-                        self.descriptions[file_name].append((desc_row[j], type_row[j]))
-                    else:
-                        self.descriptions[file_name].append((desc_row[j], 'no_type_data_provided'))
-
-    def write_label_pairs(self,label_pairs_path):
-        if path.isfile(label_pairs_path) is not True:
-            with open(label_pairs_path, 'a') as csvfile:
-                filewriter = csv.writer(csvfile, delimiter=',',
-                                        quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-                filewriter.writerow(['Image Name', 'Left Label', 'Right Label'])
-        with open(label_pairs_path, 'a') as csvfile:
-            filewriter = csv.writer(csvfile, delimiter=',',
-                                    quotechar='\"', quoting=csv.QUOTE_MINIMAL)
-            for pair in self.label_pairs[::-1]: # Reverse needed since label_pairs is treated as a queue in experiment
-                filewriter.writerow([pair[0], pair[1], pair[2]])
+        for row in temp:
+            self.image_files.add(row[0])
+            new_pair = LabelPair(row[0], row[1], row[2], row[3], row[4], row[5])
+            self.label_pairs.append(new_pair)
 
     def __init__(self, in_params):
         self.descriptions = {}
-        self.image_files = list()
+        self.image_files = set()
+        self.label_pairs = list()
         self.window = tkinter.Tk()
         self.lock_key()
         self.window.geometry("%dx%d+0+0" % (self.window.winfo_screenwidth(), self.window.winfo_screenheight()))
@@ -502,7 +378,6 @@ class RunExperiment:
         self.res_path = in_params.res_path
         self.label_pairs_path = in_params.label_pairs_path
         self.my_images = dict()
-        self.label_pairs = list()
         self.trial_number = 1
         self.curr_image_name = ''
         self.left_label = ''
@@ -525,14 +400,10 @@ class RunExperiment:
         self.img_on_canvas = None
         for image in self.image_files:
             full_path = in_params.img_path + '/' + image
-            # self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path).resize((750, 500), Image.ANTIALIAS))
             self.my_images[image] = ImageTk.PhotoImage(Image.open(full_path))
-            self.get_labels(image)
-        self.add_control_cases(in_params.nonsense_path)
-        self.write_label_pairs(in_params.label_pairs_path)
         self.run_trial(in_params.res_path)
 
 
 params = SetParameters()
-ReadInstructions()
+# ReadInstructions()
 RunExperiment(params)
